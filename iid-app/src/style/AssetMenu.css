@@ -1,0 +1,12 @@
+.shelf {
+    min-height: 200px;
+    max-width: 800px;
+    background-color: cornflowerblue;
+}
+
+img {
+    padding: 20px;
+    /* height: 150px;
+    width: 150px;   */
+    display: cover;  
+}

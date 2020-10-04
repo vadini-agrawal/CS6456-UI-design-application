@@ -1,4 +1,5 @@
 import React from 'react';
+import AssetMenu from './AssetMenu.jsx';
 import {Stage, Star, Layer, Text} from 'react-konva';
 import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
@@ -80,6 +81,7 @@ class Canvas extends React.Component {
                         </View>
                     </div>
                 </View>
+                <AssetMenu />
             </div>
         )
     }
