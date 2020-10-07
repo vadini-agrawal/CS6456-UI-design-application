@@ -1,91 +1,70 @@
 import React from 'react';
-import AssetMenu from './AssetMenu.jsx';
-import {Stage, Star, Layer, Text} from 'react-konva';
-import { Button } from 'react-bootstrap';
-import { View } from 'react-native';
+import { render } from 'react-dom';
+import { Stage, Layer, Image } from 'react-konva';
+import useImage from 'use-image';
 
-class Canvas extends React.Component {
+const URLImage = ({ image }) => {
+  const [img] = useImage(image.src);
+  return (
+    <Image
+      image={img}
+      x={image.x}
+      y={image.y}
+      draggable
+      // I will use offset to set origin to the center of the image
+      offsetX={img ? img.width / 2 : 0}
+      offsetY={img ? img.height / 2 : 0}
+    />
+  );
+};
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isDragging : false,
-            x: 50,
-            y: 50,
-            canvasWidth: 250,
-            canvasHeight: 250
-        };
-    }
+const Canvas = (props) => {
+  const dragUrl = React.useRef();
+  const stageRef = React.useRef();
+  const [images, setImages] = React.useState([]);
+  return (
+    <div>
+      Try to trag and image into the stage:
+      <br />
+      <img
+        alt="lion"
+        src="https://konvajs.org/assets/lion.png"
+        draggable="true"
+        onDragStart={e => {
+          dragUrl.current = e.target.src;
+        }}
+      />
+      <div
+        onDrop={e => {
+          // register event position
+          stageRef.current.setPointersPositions(e);
+          // add image
+          setImages(
+            images.concat([
+              {
+                ...stageRef.current.getPointerPosition(),
+                src: dragUrl.current
+              }
+            ])
+          );
+        }}
+        onDragOver={e => e.preventDefault()}
+      >
+        <Stage
+          width={props.width}
+          height={props.height}
+          style={{ border: '1px solid grey' }}
+          ref={stageRef}
+        >
+          <Layer>
+            {images.map(image => {
+              return <URLImage image={image} />;
+            })}
+          </Layer>
+        </Stage>
+      </div>
+    </div>
+  );
+};
 
-    componentDidMount() {
-        this.checkSize();
-        window.addEventListener("resize", this.checkSize);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.checkSize);
-    }
-   
-    checkSize = () => {
-        const width = this.container.offsetWidth;
-        this.setState({
-          canvasWidth: width,
-        });
-      };
-
-    render() {
-        return (
-            <div>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                <div
-                    style={{
-                        width:"50%",
-                        height:"50%",
-                        border: "2px solid grey"
-                    }}
-                    ref={node => {
-                        this.container = node;
-                    }}
-                
-                >
-                    <Stage width={this.state.canvasWidth} height={this.state.canvasHeight} style={{background: 'yellow'}}>
-                        <Layer>
-                        <Text
-                            text="Draggable Text"
-                            x={this.state.x}
-                            y={this.state.y}
-                            draggable
-                            fill={this.state.isDragging ? 'green' : 'black'}
-                            onDragStart={() => {
-                            this.setState({
-                                isDragging: true
-                            });
-                            }}
-                            onDragEnd={e => {
-                            this.setState({
-                                isDragging: false,
-                                x: e.target.x(),
-                                y: e.target.y()
-                            });
-                            }}
-                        />
-                        </Layer>
-                    </Stage>
-                    </div>
-                    <div>
-                        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
-                            <Button>Save</Button>
-                            <Button>Edit Wall Size/Color</Button>
-                            <Button>Import Photo</Button>
-                            <Button>Clear</Button>
-                        </View>
-                    </div>
-                </View>
-                <AssetMenu />
-            </div>
-        )
-    }
-
-}
-
-export default Canvas
+export default Canvas;
