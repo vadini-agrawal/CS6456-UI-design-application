@@ -62,7 +62,6 @@ class HomePage extends React.Component {
                     </View>
                 </div>
                 </View>
-                <AssetMenu />
             </div>
         )
     }

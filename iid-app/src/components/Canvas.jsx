@@ -4,6 +4,7 @@ import { Stage, Layer, Image } from 'react-konva';
 import useImage from 'use-image';
 import test from '../images/test.jpg';
 import Asset from './Asset';
+import AssetMenu from './AssetMenu';
 
 const URLImage = ({ image }) => {
   const [img] = useImage(image.src);
@@ -39,6 +40,7 @@ const Canvas = (props) => {
         draggable="true"
       />
       <Asset image_url={test} width={10} height={10} />
+      <AssetMenu />
       </div>
       <div
         onDrop={e => {
