@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 class Asset extends React.Component {
 
     constructor(props) {
@@ -14,11 +15,16 @@ class Asset extends React.Component {
             height: this.state.height,
             width: this.state.width,
         }
+        this.src = this.state.img;
     }
   
     render() {
         return (
-            <img src={this.state.img} style={this.styleObj}></img>
+            <img 
+                src={this.state.img} 
+                style={this.styleObj}
+                draggable="true"
+                ></img>
         )
     }
 
