@@ -2,6 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Stage, Layer, Image } from 'react-konva';
 import useImage from 'use-image';
+import test from '../images/test.jpg';
+import Asset from './Asset';
 
 const URLImage = ({ image }) => {
   const [img] = useImage(image.src);
@@ -26,14 +28,18 @@ const Canvas = (props) => {
     <div>
       Try to trag and image into the stage:
       <br />
+      <div 
+        onDragStart={e => {
+          dragUrl.current = e.target.src;
+        }}
+        >
       <img
         alt="lion"
         src="https://konvajs.org/assets/lion.png"
         draggable="true"
-        onDragStart={e => {
-          dragUrl.current = e.target.src;
-        }}
       />
+      <Asset image_url={test} width={10} height={10} />
+      </div>
       <div
         onDrop={e => {
           // register event position
