@@ -1,11 +1,7 @@
 import React from 'react';
-import AssetMenu from './AssetMenu.jsx';
-import {Stage, Star, Layer, Text, Image} from 'react-konva';
-import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
-import useImage from 'use-image';
 import Canvas from './Canvas';
-
+import EditMenu from './EditMenu';
 
 class HomePage extends React.Component {
 
@@ -15,8 +11,6 @@ class HomePage extends React.Component {
             isDragging : false,
             x: 50,
             y: 50,
-            canvasWidth: 250,
-            canvasHeight: 250,
             items:[]
         };
     }
@@ -44,23 +38,16 @@ class HomePage extends React.Component {
                 <View style={{flex: 1, flexDirection: 'row'}}>
                 <div
                     style={{
-                        width:"50%",
-                        height:"50%",
+                        width:"80%",
+                        height:"80%",
                         border: "2px solid grey"
                     }}
                     ref={node => {
                         this.container = node;
                     }} >
-                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight}/>
+                <Canvas width={1150} height={450}/>
                 </div>
-                <div>
-                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
-                        <Button>Save</Button>
-                        <Button>Edit Wall Size/Color</Button>
-                        <Button>Import Photo</Button>
-                        <Button>Clear</Button>
-                    </View>
-                </div>
+                <EditMenu />
                 </View>
             </div>
         )
