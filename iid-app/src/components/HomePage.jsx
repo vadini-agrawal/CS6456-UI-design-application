@@ -6,6 +6,9 @@ import Modal from 'react-bootstrap/Modal';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
+import Asset from "./Asset";
+import test from '../images/test.jpg';
+
 
 class HomePage extends React.Component {
 
@@ -26,10 +29,18 @@ class HomePage extends React.Component {
             modalInputFloorColor: "#000000",
             floorColor: "#000000",
             items:[],
-            pictures: [],
-            modalImage: false
+            picture: null,
+            modalImage: false,
+            photoInputHeight: 0,
+            photoInputWidth: 0,
+            assetList: [],
+            clearWall: false
         };
         this.onDrop = this.onDrop.bind(this);
+    }
+
+    componentWillMount() {
+        this.createInitialAssets();
     }
 
     handleChange(e) {
@@ -42,10 +53,31 @@ class HomePage extends React.Component {
         });
     }
 
-    onDrop(pictureFiles, pictureDataURLs) {
-        this.setState({
-          pictures: this.state.pictures.concat(pictureFiles)
-        });
+    onDrop(event) {
+        console.log(event);
+        var src = null;
+        try {
+            const objectURL = window.URL.createObjectURL(event);
+            src = objectURL;
+            //window.URL.revokeObjectURL(objectURL);
+        }
+        catch (e) {
+            try {
+                // Fallback if createObjectURL is not supported
+                const fileReader = new FileReader();
+                fileReader.onload = (evt) => {
+                    src = evt.target.result;
+                };
+                fileReader.readAsDataURL(event);
+                }
+              catch(e) {
+                console.log(`File Upload not supported: ${e}`);
+              }
+        }
+        console.log(src);
+        // this.setState({
+        //   picture: URL.createObjectURL(event)
+        // });
       }
     
 
@@ -56,8 +88,6 @@ class HomePage extends React.Component {
             wallColor: this.state.modalInputColor,
             floorColor: this.state.modalInputFloorColor
         });
-        console.log("wall color"+ this.state.wallColor);
-        console.log("floor color" + this.state.floorColor);
         this.modalCloseWall();
         this.forceUpdate();
     }
@@ -86,6 +116,12 @@ class HomePage extends React.Component {
     handleChangeColorFloor = (color, event) => {
         console.log('changing floor color');
         this.setState({modalInputFloorColor: color.hex, floorColor: color.hex});
+    }
+
+    createInitialAssets() {
+        var list = [<Asset image_url={test} width={10} height={10} />, <Asset image_url={test} width={30} height={5} />, <Asset image_url={test} width={18} height={15} />
+        ];
+        this.setState({assetList: list})
     }
 
 
@@ -119,9 +155,21 @@ class HomePage extends React.Component {
         this.setState({canvasWidth: value});
     }
 
+    clearWall() {
+        //this.setState({clearWall: true});
+    }
+
     uploadPhotos() {
+        var newAsset = <Asset image_url={this.state.picture} width={this.photoInputWidth} height={this.photoInputHeight} />
+        var assetListNew = this.state.assetList.concat(newAsset);
+        this.setState({
+            assetList: assetListNew,
+            picture: null,
+            photoInputHeight: 0,
+            photoInputWidth: 0
+        });
         this.modalCloseImage();
-        console.log(this.state.pictures);
+        console.log(this.state.picture);
     }
 
     render() {
@@ -183,10 +231,32 @@ class HomePage extends React.Component {
                                 imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg"]}
                                 maxFileSize={1048576}
                                 fileSizeError=" file size is too big"
+                                singleImage={true}
                             />
-                            <Button onClick= {e => this.uploadPhotos(e)}>Done</Button>
+                            <label> Enter Height </label>
+                            <input 
+                                    type="number"
+                                    value={this.state.photoInputHeight}
+                                    name="photoInputHeight"
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control"
+                            />
+                            <label> Enter Width </label>
+                            <input 
+                                    type="number"
+                                    value={this.state.photoInputWidth}
+                                    name="photoInputWidth"
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control"
+                            />
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <Button onClick= {e => this.uploadPhotos(e)}>Done</Button>
+                                <Button onClick= {e => this.modalCloseImage(e)}>Cancel</Button>
+                            </View>
+                            
                         </Modal>
-                        <Button>Clear</Button>
+                        <Button onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
+                        <Button onClick = {e => this.clearWall()}>Clear Wall</Button>
                     </View>
                 </div>
                 <div
@@ -196,9 +266,10 @@ class HomePage extends React.Component {
                     ref={node => {
                         this.container = node;
                     }} >
-                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor}/>
+                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
                 </div>
                 </View>
+                <img src={this.state.picture} />
             </div>
         )
     }

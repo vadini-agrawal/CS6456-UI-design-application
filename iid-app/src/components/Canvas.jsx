@@ -23,6 +23,9 @@ const Canvas = (props) => {
   const dragUrl = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
+  if (props.clearWall == true){
+    images.length = 0;
+  }
   return (
     <div>
       <div
@@ -84,7 +87,7 @@ const Canvas = (props) => {
           dragUrl.current = e.target.src;
         }}
         >
-      <AssetMenu />
+      <AssetMenu assetList = {props.assetList}/>
       </div>
     </div>
   );
