@@ -55,7 +55,7 @@ class HomePage extends React.Component {
     }
 
     handleChangeColor = (color, event) => {
-        this.setState({modalInputColor: color.hex});
+        this.setState({modalInputColor: color.hex, wallColor: color.hex});
     }
 
 
@@ -128,7 +128,7 @@ class HomePage extends React.Component {
                                 />
                                 <button onClick={this.handleColorChangeClick}>Pick Color</button>
                                 {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
-                                <ChromePicker color={this.state.wallColor} onChange = {this.handleChangeColor} />
+                                <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColor} />
                                 </div> : null}
                             </div>
                             <div className="form-group">
@@ -143,7 +143,8 @@ class HomePage extends React.Component {
                 </div>
                 <div
                     style={{
-                        border: "2px solid grey"
+                        border: "2px solid grey",
+                        backgroundColor: this.state.wallColor
                     }}
                     ref={node => {
                         this.container = node;

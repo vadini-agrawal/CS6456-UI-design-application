@@ -1,7 +1,8 @@
 import React from 'react';
-import { Stage, Layer, Image } from 'react-konva';
+import { Stage, Layer, Image, Rect, Line } from 'react-konva';
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
+import { ProgressBar } from 'react-bootstrap';
 
 const URLImage = ({ image }) => {
   const [img] = useImage(image.src);
@@ -50,6 +51,22 @@ const Canvas = (props) => {
             {images.map(image => {
               return <URLImage image={image} />;
             })}
+          </Layer>
+          <Layer>
+            <Rect
+              x={0}
+              y={props.height - 32}
+              height = {2}
+              width = {props.width}
+              fill = "white"
+              />
+            <Rect 
+              x={0}
+              y={props.height - 30}
+              width = {props.width}
+              height = {30}
+              fill="black"
+              />
           </Layer>
         </Stage>
       </div>
