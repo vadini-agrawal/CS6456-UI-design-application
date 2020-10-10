@@ -1,7 +1,13 @@
 import React from 'react';
+import AssetMenu from './AssetMenu.jsx';
+import {Stage, Star, Layer, Text, Image} from 'react-konva';
+import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
+import useImage from 'use-image';
 import Canvas from './Canvas';
-import EditMenu from './EditMenu';
+import Modal from 'react-bootstrap/Modal';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { ChromePicker } from 'react-color';
 
 class HomePage extends React.Component {
 
@@ -11,43 +17,143 @@ class HomePage extends React.Component {
             isDragging : false,
             x: 50,
             y: 50,
+            canvasWidth: 250,
+            canvasHeight: 250,
+            modalWall: false,
+            modalInputWidth: 750,
+            modalInputHeight: 500,
+            colorInput: false,
+            modalInputColor: "#fff",
+            wallColor: "#fff",
             items:[]
         };
     }
 
-    componentDidMount() {
-        this.checkSize();
-        window.addEventListener("resize", this.checkSize);
-    }
-
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.checkSize);
-    }
-   
-    checkSize = () => {
-        const width = this.container.offsetWidth;
+    handleChange(e) {
+        const target = e.target;
+        const name = target.name;
+        const value = target.value;
+    
         this.setState({
-          canvasWidth: width,
+          [name]: value
         });
-      };
+      }
+
+    handleSubmitModal(e) {
+        this.setState({
+            canvasWidth: this.state.modalInputWidth, 
+            canvasHeight: this.state.modalInputHeight,
+            wallColor: this.state.modalInputColor
+        });
+        this.modalCloseWall();
+    }
+
+    modalOpenWall() {
+        this.setState({modalWall: true});
+    }
+
+    modalCloseWall() {
+        this.setState({modalInputWidth: 750, modalInputHeight:500, modalWall: false});
+    }
+
+    handleChangeColor = (color, event) => {
+        this.setState({modalInputColor: color.hex});
+    }
+
+
+    // componentDidMount() {
+    //     this.checkSize();
+    //     window.addEventListener("resize", this.checkSize);
+    // }
+
+
+    // componentWillUnmount() {
+    //     window.removeEventListener("resize", this.checkSize);
+    // }
+   
+    // checkSize = () => {
+    //     const width = this.container.offsetWidth;
+    //     this.setState({
+    //       canvasWidth: width,
+    //     });
+    //   };
+
+    handleColorChangeClick = () => {
+        this.setState({colorInput : true});
+    }
+
+    handleColorChangeClose = () => {
+        this.setState({colorInput : false});
+    }
+
+    popUpChange(e) {
+        let value = e.target.value;
+        this.setState({canvasWidth: value});
+    }
 
     render() {
+        const colorPopover = {
+            position: 'absolute',
+            zIndex: '2',
+        }
+        const cover = {
+            position: 'fixed',
+            top: '0px',
+            right: '0px',
+            bottom: '0px',
+            left: '0px',
+        }
         return (
             <div>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                 <div
                     style={{
-                        width:"80%",
-                        height:"80%",
+                        width:"50%",
+                        height:"50%",
                         border: "2px solid grey"
                     }}
                     ref={node => {
                         this.container = node;
                     }} >
-                <Canvas width={1150} height={450}/>
+                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight}/>
                 </div>
-                <EditMenu />
+                <div>
+                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
+                        <Button>Save</Button>
+                        <Button onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
+                        <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
+                            <div className="form-group">
+                                <label>Enter Height</label>
+                                <input 
+                                    type="number"
+                                    value={this.state.modalInputHeight}
+                                    name="modalInputHeight"
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control"
+                                />
+                                <label>Enter Width</label>
+                                <input 
+                                    type="number"
+                                    value={this.state.modalInputWidth}
+                                    name="modalInputWidth"
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control"
+                                />
+                                <button onClick={this.handleColorChangeClick}>Pick Color</button>
+                                {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
+                                <ChromePicker color={this.state.wallColor} onChange = {this.handleChangeColor} />
+                                </div> : null}
+                            </div>
+                            <div className="form-group">
+                                <button onClick={e => this.handleSubmitModal(e)} type="button">
+                                Save
+                                </button>
+                            </div>
+                        </Modal>
+                        <Button>Import Photo</Button>
+                        <Button>Clear</Button>
+                    </View>
+                </div>
                 </View>
             </div>
         )
