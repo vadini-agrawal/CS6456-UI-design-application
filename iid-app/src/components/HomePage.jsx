@@ -1,9 +1,6 @@
 import React from 'react';
-import AssetMenu from './AssetMenu.jsx';
-import {Stage, Star, Layer, Text, Image} from 'react-konva';
 import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
-import useImage from 'use-image';
 import Canvas from './Canvas';
 import Modal from 'react-bootstrap/Modal';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,8 +17,8 @@ class HomePage extends React.Component {
             canvasWidth: 250,
             canvasHeight: 250,
             modalWall: false,
-            modalInputWidth: 750,
-            modalInputHeight: 500,
+            modalInputWidth: 250,
+            modalInputHeight: 250,
             colorInput: false,
             modalInputColor: "#fff",
             wallColor: "#fff",
@@ -46,6 +43,7 @@ class HomePage extends React.Component {
             wallColor: this.state.modalInputColor
         });
         this.modalCloseWall();
+        this.forceUpdate();
     }
 
     modalOpenWall() {
@@ -53,7 +51,7 @@ class HomePage extends React.Component {
     }
 
     modalCloseWall() {
-        this.setState({modalInputWidth: 750, modalInputHeight:500, modalWall: false});
+        this.setState({modalWall: false});
     }
 
     handleChangeColor = (color, event) => {
@@ -106,17 +104,6 @@ class HomePage extends React.Component {
         return (
             <div>
                 <View style={{flex: 1, flexDirection: 'row'}}>
-                <div
-                    style={{
-                        width:"50%",
-                        height:"50%",
-                        border: "2px solid grey"
-                    }}
-                    ref={node => {
-                        this.container = node;
-                    }} >
-                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight}/>
-                </div>
                 <div>
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
                         <Button>Save</Button>
@@ -153,6 +140,15 @@ class HomePage extends React.Component {
                         <Button>Import Photo</Button>
                         <Button>Clear</Button>
                     </View>
+                </div>
+                <div
+                    style={{
+                        border: "2px solid grey"
+                    }}
+                    ref={node => {
+                        this.container = node;
+                    }} >
+                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight}/>
                 </div>
                 </View>
             </div>
