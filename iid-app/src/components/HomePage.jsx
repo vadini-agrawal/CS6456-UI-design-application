@@ -1,10 +1,13 @@
 import React from 'react';
+import AssetMenu from './AssetMenu.jsx';
+import {Stage, Star, Layer, Text, Image} from 'react-konva';
+import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
+import useImage from 'use-image';
 import Canvas from './Canvas';
 import Modal from 'react-bootstrap/Modal';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
-import EditMenu from './EditMenu';
 
 class HomePage extends React.Component {
 
@@ -105,8 +108,8 @@ class HomePage extends React.Component {
                 <View style={{flex: 1, flexDirection: 'row'}}>
                 <div
                     style={{
-                        width:"80%",
-                        height:"80%",
+                        width:"50%",
+                        height:"50%",
                         border: "2px solid grey"
                     }}
                     ref={node => {
@@ -138,7 +141,7 @@ class HomePage extends React.Component {
                                 />
                                 <button onClick={this.handleColorChangeClick}>Pick Color</button>
                                 {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
-                                <ChromePicker color={this.state.wallColor} onChangeComplete = {this.handleChangeColor} />
+                                <ChromePicker color={this.state.wallColor} onChange = {this.handleChangeColor} />
                                 </div> : null}
                             </div>
                             <div className="form-group">
@@ -150,9 +153,7 @@ class HomePage extends React.Component {
                         <Button>Import Photo</Button>
                         <Button>Clear</Button>
                     </View>
-                <Canvas width={1150} height={450}/>
                 </div>
-                <EditMenu />
                 </View>
             </div>
         )
