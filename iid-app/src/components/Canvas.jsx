@@ -48,6 +48,15 @@ const Canvas = (props) => {
           ref={stageRef}
         >
           <Layer>
+            <Rect 
+              x={0}
+              y={0}
+              width={props.width}
+              height={props.height}
+              fill={props.wallColor}
+            />
+          </Layer>
+          <Layer>
             {images.map(image => {
               return <URLImage image={image} />;
             })}
@@ -65,7 +74,7 @@ const Canvas = (props) => {
               y={props.height - 30}
               width = {props.width}
               height = {30}
-              fill="black"
+              fill={props.floorColor}
               />
           </Layer>
         </Stage>

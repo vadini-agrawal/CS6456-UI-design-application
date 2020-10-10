@@ -22,6 +22,8 @@ class HomePage extends React.Component {
             colorInput: false,
             modalInputColor: "#fff",
             wallColor: "#fff",
+            modalInputFloorColor: "#000000",
+            floorColor: "#000000",
             items:[]
         };
     }
@@ -40,8 +42,11 @@ class HomePage extends React.Component {
         this.setState({
             canvasWidth: this.state.modalInputWidth, 
             canvasHeight: this.state.modalInputHeight,
-            wallColor: this.state.modalInputColor
+            wallColor: this.state.modalInputColor,
+            floorColor: this.state.modalInputFloorColor
         });
+        console.log("wall color"+ this.state.wallColor);
+        console.log("floor color" + this.state.floorColor);
         this.modalCloseWall();
         this.forceUpdate();
     }
@@ -54,8 +59,14 @@ class HomePage extends React.Component {
         this.setState({modalWall: false});
     }
 
-    handleChangeColor = (color, event) => {
+    handleChangeColorWall = (color, event) => {
+        console.log('changing wall color');
         this.setState({modalInputColor: color.hex, wallColor: color.hex});
+    }
+
+    handleChangeColorFloor = (color, event) => {
+        console.log('changing floor color');
+        this.setState({modalInputFloorColor: color.hex, floorColor: color.hex});
     }
 
 
@@ -126,9 +137,9 @@ class HomePage extends React.Component {
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                                 />
-                                <button onClick={this.handleColorChangeClick}>Pick Color</button>
+                                <button onClick={this.handleColorChangeClick}>Pick Wall Color</button>
                                 {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
-                                <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColor} />
+                                <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorWall} />
                                 </div> : null}
                             </div>
                             <div className="form-group">
@@ -144,12 +155,11 @@ class HomePage extends React.Component {
                 <div
                     style={{
                         border: "2px solid grey",
-                        backgroundColor: this.state.wallColor
                     }}
                     ref={node => {
                         this.container = node;
                     }} >
-                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight}/>
+                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor}/>
                 </div>
                 </View>
             </div>
