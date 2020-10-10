@@ -5,6 +5,7 @@ import Canvas from './Canvas';
 import Modal from 'react-bootstrap/Modal';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
+import ImageUploader from "react-images-upload";
 
 class HomePage extends React.Component {
 
@@ -24,8 +25,11 @@ class HomePage extends React.Component {
             wallColor: "#fff",
             modalInputFloorColor: "#000000",
             floorColor: "#000000",
-            items:[]
+            items:[],
+            pictures: [],
+            modalImage: false
         };
+        this.onDrop = this.onDrop.bind(this);
     }
 
     handleChange(e) {
@@ -36,7 +40,14 @@ class HomePage extends React.Component {
         this.setState({
           [name]: value
         });
+    }
+
+    onDrop(pictureFiles, pictureDataURLs) {
+        this.setState({
+          pictures: this.state.pictures.concat(pictureFiles)
+        });
       }
+    
 
     handleSubmitModal(e) {
         this.setState({
@@ -53,6 +64,14 @@ class HomePage extends React.Component {
 
     modalOpenWall() {
         this.setState({modalWall: true});
+    }
+
+    modalOpenImage() {
+        this.setState({modalImage: true});
+    }
+
+    modalCloseImage() {
+        this.setState({modalImage: false});
     }
 
     modalCloseWall() {
@@ -98,6 +117,11 @@ class HomePage extends React.Component {
     popUpChange(e) {
         let value = e.target.value;
         this.setState({canvasWidth: value});
+    }
+
+    uploadPhotos() {
+        this.modalCloseImage();
+        console.log(this.state.pictures);
     }
 
     render() {
@@ -148,7 +172,20 @@ class HomePage extends React.Component {
                                 </button>
                             </div>
                         </Modal>
-                        <Button>Import Photo</Button>
+                        <Button onClick= {e => this.modalOpenImage(e)}>Import Photo</Button>
+                        <Modal show= {this.state.modalImage} onHide={e => this.modalCloseImage}>
+                            <ImageUploader
+                                withIcon={false}
+                                withPreview={true}
+                                label=""
+                                buttonText="Select Photos"
+                                onChange={this.onDrop}
+                                imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg"]}
+                                maxFileSize={1048576}
+                                fileSizeError=" file size is too big"
+                            />
+                            <Button onClick= {e => this.uploadPhotos(e)}>Done</Button>
+                        </Modal>
                         <Button>Clear</Button>
                     </View>
                 </div>
