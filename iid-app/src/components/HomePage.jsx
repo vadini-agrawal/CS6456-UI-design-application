@@ -7,7 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
 import Asset from "./Asset";
-import test from '../images/test.jpg';
 
 
 class HomePage extends React.Component {
@@ -119,7 +118,22 @@ class HomePage extends React.Component {
     }
 
     createInitialAssets() {
-        var list = [<Asset image_url={test} width={10} height={10} />, <Asset image_url={test} width={30} height={5} />, <Asset image_url={test} width={18} height={15} />
+        var propsData = {
+            image_url: 'https://konvajs.org/assets/lion.png',
+            width: 10,
+            height: 8
+        };
+        var propsData1 = {
+            image_url: 'https://konvajs.org/assets/lion.png',
+            width: 14,
+            height: 7
+        };
+        var propsData2 = {
+            image_url: 'https://konvajs.org/assets/lion.png',
+            width: 8,
+            height: 14
+        };
+        var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />
         ];
         this.setState({assetList: list})
     }
