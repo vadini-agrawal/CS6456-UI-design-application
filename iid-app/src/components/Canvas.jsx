@@ -2,27 +2,38 @@ import React from 'react';
 import { Stage, Layer, Image, Rect, Line } from 'react-konva';
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
+import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
+import Carousel from 'react-elastic-carousel';
 
-const URLImage = ({ image }) => {
+
+const URLImage = ({ image, height, width }) => {
   const [img] = useImage(image.src);
+  console.log(image);
+  console.log(height);
+  console.log(width);
   return (
     <Image
       image={img}
       x={image.x}
       y={image.y}
+      height={height}
+      width={width}
       draggable
       // I will use offset to set origin to the center of the image
-      offsetX={img ? img.width / 2 : 0}
-      offsetY={img ? img.height / 2 : 0}
+      offsetX={img ? width / 2 : 0}
+      offsetY={img ? height / 2 : 0}
     />
   );
 };
 
 const Canvas = (props) => {
   const dragUrl = React.useRef();
+  const imgHeight = React.useRef();
+  const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
+  console.log(props.assetList);
   if (props.clearWall == true){
     images.length = 0;
   }
@@ -37,7 +48,9 @@ const Canvas = (props) => {
             images.concat([
               {
                 ...stageRef.current.getPointerPosition(),
-                src: dragUrl.current
+                src: dragUrl.current,
+                height: imgHeight.current,
+                width: imgWidth.current
               }
             ])
           );
@@ -61,7 +74,7 @@ const Canvas = (props) => {
           </Layer>
           <Layer>
             {images.map(image => {
-              return <URLImage image={image} />;
+              return <URLImage image={image} height={image.height} width={image.width}/>;
             })}
           </Layer>
           <Layer>
@@ -85,9 +98,13 @@ const Canvas = (props) => {
             <div 
         onDragStart={e => {
           dragUrl.current = e.target.src;
+          imgHeight.current = e.target.height;
+          imgWidth.current = e.target.width;
         }}
         >
-      <AssetMenu assetList = {props.assetList}/>
+      <Layer>
+        <AssetMenu assetList = {props.assetList}/>
+      </Layer>
       </div>
     </div>
   );

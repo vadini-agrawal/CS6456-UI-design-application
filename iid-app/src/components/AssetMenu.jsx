@@ -1,6 +1,6 @@
 import React from 'react';
 // import styled from 'styled-components';
-
+import { Layer} from 'react-konva';
 import Carousel from 'react-elastic-carousel';
 
 import '../style/AssetMenu.css';
@@ -26,7 +26,7 @@ class AssetMenu extends React.Component {
         return (
             <div className="shelf">
             <Carousel itemsToShow={2}>
-                {this.state.assetList}
+                    {this.state.assetList}
             </Carousel>
             </div>
         );
