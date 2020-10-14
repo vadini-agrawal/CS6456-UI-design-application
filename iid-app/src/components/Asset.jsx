@@ -1,29 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { Image, Layer } from 'react-konva';
-import { Img } from 'react-image';
-import useImage from 'use-image';
-
 function Asset(props)
 {
-    // const [image] = useImage(props.data.image_url);
-    // const image = document.createElement("img");
-
-    // const [image, setImage] = useState(new window.Image());
-
-    // useEffect(() => {
-    //   const img = new window.Image();
-    //   img.src =
-    //     "https://konvajs.org/assets/lion.png";
-    //   setImage(img);
-    // }, []);
-    // const [image] = useImage("https://konvajs.org/assets/lion.png")
-  
-    // image.src = props.data.image_url;
     const [width] = useState(props.data.width*12);
     const [height] = useState(props.data.height*12);
-    // const [weight] = useState(props.data.weight)
     return <img src={props.data.image_url} width={width} height={height} draggable="true"/>;
-    // return <Image image={image} />;
 
 }
 
