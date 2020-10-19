@@ -33,6 +33,12 @@ const Canvas = (props) => {
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
+
+  const handleDragEnd = (e) => {
+    dragUrl.current = e.target.src;
+    console.log('here');
+    console.log(e);
+  }
   
   //console.log(props.assetList);
   if (props.clearWall == true && images.length != 0){
@@ -45,17 +51,25 @@ const Canvas = (props) => {
           // register event position
           stageRef.current.setPointersPositions(e);
           // add image
-          setImages(
-            images.concat([
-              {
-                ...stageRef.current.getPointerPosition(),
-                src: dragUrl.current,
-                height: imgHeight.current,
-                width: imgWidth.current
-              }
-            ])
-          );
-        }}
+          console.log(stageRef.current.getPointerPosition());
+          if (stageRef.current.getPointerPosition().x > (props.width - 50) &&
+              stageRef.current.getPointerPosition().x < props.width && 
+              stageRef.current.getPointerPosition().y > 0 && 
+              stageRef.current.getPointerPosition().y < 50) {
+                console.log("trash");
+              } else {
+                setImages(
+                  images.concat([
+                    {
+                      ...stageRef.current.getPointerPosition(),
+                      src: dragUrl.current,
+                      height: imgHeight.current,
+                      width: imgWidth.current
+                    }
+                  ])
+                );
+              }}
+            }
         onDragOver={e => e.preventDefault()}
       >
         <Stage
@@ -72,10 +86,17 @@ const Canvas = (props) => {
               height={props.height}
               fill={props.wallColor}
             />
+            <Rect
+                x={props.width - 50}
+                y={0}
+                height = {50}
+                width = {50}
+                fill = "grey" 
+              />
           </Layer>
           <Layer>
             {images.map(image => {
-              return <URLImage image={image} height={image.height} width={image.width}/>;
+              return <URLImage image={image} height={image.height} width={image.width} onDragEnd={handleDragEnd}/>;
             })}
           </Layer>
           <Layer>
