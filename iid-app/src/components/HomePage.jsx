@@ -7,7 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
 import Asset from "./Asset";
-
+import Doc from './DocService';
+import PdfContainer from './PdfContainer';
 
 class HomePage extends React.Component {
 
@@ -190,6 +191,8 @@ class HomePage extends React.Component {
         console.log(this.state.picture);
     }
 
+    createPdf = (html) => Doc.createPdf(html);
+
     render() {
         const colorPopover = {
             position: 'absolute',
@@ -284,7 +287,9 @@ class HomePage extends React.Component {
                     ref={node => {
                         this.container = node;
                     }} >
+                <PdfContainer createPdf={this.createPdf}>
                 <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
+                </PdfContainer>
                 </div>
                 </View>
                 <img src={this.state.picture} />

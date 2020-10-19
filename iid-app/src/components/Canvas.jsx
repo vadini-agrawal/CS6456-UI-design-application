@@ -5,6 +5,9 @@ import AssetMenu from './AssetMenu';
 import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
+import PdfContainer from './PdfContainer';
+import Doc from './DocService';
+
 
 
 const URLImage = ({ image, height, width }) => {
@@ -38,6 +41,8 @@ const Canvas = (props) => {
   if (props.clearWall == true && images.length != 0){
     images.splice(0, images.length);
   }
+
+
   return (
     <div>
       <div
@@ -58,6 +63,8 @@ const Canvas = (props) => {
         }}
         onDragOver={e => e.preventDefault()}
       >
+       <PdfContainer createPdf={(html) => Doc.createPdf(html)}>
+         <React.Fragment>
         <Stage
           width={props.width}
           height={props.height}
@@ -73,6 +80,7 @@ const Canvas = (props) => {
               fill={props.wallColor}
             />
           </Layer>
+
           <Layer>
             {images.map(image => {
               return <URLImage image={image} height={image.height} width={image.width}/>;
@@ -95,6 +103,8 @@ const Canvas = (props) => {
               />
           </Layer>
         </Stage>
+        </React.Fragment>
+        </PdfContainer>
       </div>
             <div 
         onDragStart={e => {
