@@ -40,6 +40,7 @@ class URLImage extends React.Component {
             this.imageNode = node;
           }}
           draggable="true"
+          onDragEnd={this.props.onDragEnd}
         />
       );
     }
