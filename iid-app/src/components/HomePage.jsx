@@ -170,8 +170,12 @@ class HomePage extends React.Component {
     }
 
     clearWall() {
-        //this.setState({clearWall: true});
+        this.setState({clearWall: true});
+        setTimeout(function() { 
+            this.setState({clearWall: false})
+        }.bind(this), 100)
     }
+
 
     uploadPhotos() {
         var newAsset = <Asset image_url={this.state.picture} width={this.photoInputWidth} height={this.photoInputHeight} />

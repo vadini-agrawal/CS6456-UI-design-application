@@ -33,9 +33,10 @@ const Canvas = (props) => {
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
-  console.log(props.assetList);
-  if (props.clearWall == true){
-    images.length = 0;
+  
+  //console.log(props.assetList);
+  if (props.clearWall == true && images.length != 0){
+    images.splice(0, images.length);
   }
   return (
     <div>
