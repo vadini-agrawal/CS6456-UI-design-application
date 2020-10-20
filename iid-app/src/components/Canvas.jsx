@@ -5,6 +5,7 @@ import AssetMenu from './AssetMenu';
 import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
+import trashCan from '../images/trashCan.jpg';
 
 
 const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY }) => {
@@ -117,7 +118,7 @@ const Canvas = (props) => {
                 y={0}
                 height = {50}
                 width = {50}
-                fill = "grey" 
+                fill = "grey"
               />
           </Layer>
           <Layer>
