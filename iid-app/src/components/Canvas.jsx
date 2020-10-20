@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Stage, Layer, Image, Rect, Line } from 'react-konva';
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
 import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
+import trashCan from '../images/trashCan.jpg';
 
 
-const URLImage = ({ image, height, width }) => {
+const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY }) => {
   const [img] = useImage(image.src);
   console.log(image);
   console.log(height);
@@ -23,6 +24,10 @@ const URLImage = ({ image, height, width }) => {
       // I will use offset to set origin to the center of the image
       offsetX={img ? width / 2 : 0}
       offsetY={img ? height / 2 : 0}
+      onDragEnd = {onDragEnd}
+      onDragStart = {onDragStart}
+      originalX = {originalX}
+      originalY = {originalY}
     />
   );
 };
@@ -34,7 +39,33 @@ const Canvas = (props) => {
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
   
-  //console.log(props.assetList);
+  useEffect(() => {
+    if (!images) {
+      console.log('run something here');
+    }
+}, [images]);
+
+
+  const handleDragEnd = (e) => {
+    console.log(e);
+    if (e.target.attrs.x > (props.width - 50) &&
+    e.target.attrs.x < props.width && 
+    e.target.attrs.y > 0 && 
+    e.target.attrs.y < 50) {
+      console.log("trash");
+      setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
+        || item.src !== e.target.attrs.image.currentSrc || item.width !== e.target.attrs.width || item.height !== e.target.attrs.height)));
+    } else {
+      console.log('Not trash');
+    }
+  }
+  
+  const handleDragStart = (e) => {
+    console.log("Drag Start");
+    console.log(e);
+  }
+
+  
   if (props.clearWall == true && images.length != 0){
     images.splice(0, images.length);
   }
@@ -44,18 +75,28 @@ const Canvas = (props) => {
         onDrop={e => {
           // register event position
           stageRef.current.setPointersPositions(e);
+
           // add image
-          setImages(
-            images.concat([
-              {
-                ...stageRef.current.getPointerPosition(),
-                src: dragUrl.current,
-                height: imgHeight.current,
-                width: imgWidth.current
+          console.log(stageRef.current.getPointerPosition());
+          if (stageRef.current.getPointerPosition().x > (props.width - 50) &&
+              stageRef.current.getPointerPosition().x < props.width && 
+              stageRef.current.getPointerPosition().y > 0 && 
+              stageRef.current.getPointerPosition().y < 50) {
+                console.log("trash");
+              } else {
+                setImages(
+                  images.concat([
+                    {
+                      ...stageRef.current.getPointerPosition(),
+                      src: dragUrl.current,
+                      height: imgHeight.current,
+                      width: imgWidth.current
+                    }
+                  ])
+                );
               }
-            ])
-          );
-        }}
+            }
+            }
         onDragOver={e => e.preventDefault()}
       >
         <Stage
@@ -72,10 +113,18 @@ const Canvas = (props) => {
               height={props.height}
               fill={props.wallColor}
             />
+            <Rect
+                x={props.width - 50}
+                y={0}
+                height = {50}
+                width = {50}
+                fill = "grey"
+              />
           </Layer>
           <Layer>
+
             {images.map(image => {
-              return <URLImage image={image} height={image.height} width={image.width}/>;
+                return <URLImage image={image} height={image.height} width={image.width} onDragEnd={handleDragEnd} onDragStart={handleDragStart} originalX={image.x} originalY={image.y}/>;
             })}
           </Layer>
           <Layer>
