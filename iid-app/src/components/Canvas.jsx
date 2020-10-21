@@ -1,11 +1,14 @@
 import React, {useEffect} from 'react';
 import { Stage, Layer, Image, Rect, Line } from 'react-konva';
+import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
 import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
 import TrashCanImage from './TrashCanImage';
+import * as html2Canvas from 'html2canvas';
+import {jsPDF} from 'jspdf';
 
 const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY }) => {
   const [img] = useImage(image.src);
@@ -27,6 +30,17 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
     />
   );
 };
+
+const printDocument = () => {
+//   const input = document.getElementById('divToPrint');
+//   html2Canvas(input).then((canvas) => {
+//           const imgData = canvas.toDataURL('image/png');
+//           const pdf = new jsPDF();
+//           pdf.addImage(imgData, 'JPEG', 0, 0, 200, 200);
+//           // pdf.output('dataurlnewwindow');
+//           pdf.save("download.pdf");
+// });
+}
 
 
 const Canvas = (props) => {
@@ -66,7 +80,10 @@ const Canvas = (props) => {
   }
   return (
     <div>
+      <Button onClick = {printDocument} >Click</Button>
       <div
+        id = "divToPrint"
+        className = "mt4"
         onDrop={e => {
           // register event position
           stageRef.current.setPointersPositions(e);
@@ -99,6 +116,7 @@ const Canvas = (props) => {
           ref={stageRef}
         >
           <Layer>
+
             <Rect 
               x={0}
               y={0}

@@ -7,7 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
 import Asset from "./Asset";
-
+import * as html2Canvas from 'html2canvas';
+import {jsPDF} from 'jspdf';
 
 class HomePage extends React.Component {
 
@@ -51,6 +52,19 @@ class HomePage extends React.Component {
           [name]: value
         });
     }
+
+    printDocument() {
+        const input = document.getElementById('divToPrint');
+        html2Canvas(input).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, 'JPEG', 0, 0, 200, 200);
+                // pdf.output('dataurlnewwindow');
+                pdf.save("download.pdf");
+      })
+    ;
+  }
+
 
     onDrop(event) {
         console.log(event);
@@ -207,7 +221,7 @@ class HomePage extends React.Component {
                 <View style={{flex: 1, flexDirection: 'row'}}>
                 <div>
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
-                        <Button>Save</Button>
+                        <Button onClick={this.printDocument}>Save</Button>
                         <Button onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
                         <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
                             <div className="form-group">
@@ -278,6 +292,8 @@ class HomePage extends React.Component {
                     </View>
                 </div>
                 <div
+                    id="divToPrint" 
+                    className="mt4"
                     style={{
                         border: "2px solid grey",
                     }}
