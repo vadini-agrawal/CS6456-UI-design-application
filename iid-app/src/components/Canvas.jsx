@@ -5,7 +5,7 @@ import AssetMenu from './AssetMenu';
 import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
-
+import '../style/AssetMenu.css';
 
 const URLImage = ({ image, height, width }) => {
   const [img] = useImage(image.src);
@@ -33,7 +33,8 @@ const Canvas = (props) => {
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
-  console.log(props.assetList);
+  // console.log("THIS IS WHAT CANVAS HAS AS ASSETS");
+  // console.log(props.assetList);
   if (props.clearWall == true){
     images.length = 0;
   }
@@ -95,7 +96,7 @@ const Canvas = (props) => {
           </Layer>
         </Stage>
       </div>
-            <div 
+        <div 
         onDragStart={e => {
           dragUrl.current = e.target.src;
           imgHeight.current = e.target.height;
@@ -104,6 +105,9 @@ const Canvas = (props) => {
         >
       <Layer>
         <AssetMenu assetList = {props.assetList}/>
+        {/* <Carousel itemsToShow={2}>
+              {props.assetList}
+        </Carousel> */}
       </Layer>
       </div>
     </div>
