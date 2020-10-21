@@ -10,6 +10,8 @@ import Asset from "./Asset";
 import DrawCanvas from './DrawCanvas';
 import {exportComponentAsJPEG, exportComponentAsPDF} from 'react-component-export-image';
 import CanvasHolder from './CanvasHolder';
+import { API_URL } from './config'
+
 
 class HomePage extends React.Component {
 
@@ -62,30 +64,26 @@ class HomePage extends React.Component {
     }
 
     onDrop(event) {
+        const formData = new FormData();
         console.log(event);
-        var src = null;
-        try {
-            const objectURL = window.URL.createObjectURL(event);
-            src = objectURL;
-            //window.URL.revokeObjectURL(objectURL);
-        }
-        catch (e) {
-            try {
-                // Fallback if createObjectURL is not supported
-                const fileReader = new FileReader();
-                fileReader.onload = (evt) => {
-                    src = evt.target.result;
-                };
-                fileReader.readAsDataURL(event);
+        formData.append(0, event[0]);
+        console.log("FILE DATAAAA");
+        console.log(formData.get("0"));
+        fetch(`${API_URL}/image-upload`, {
+            method: 'POST',
+            body: formData
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw res
                 }
-              catch(e) {
-                console.log(`File Upload not supported: ${e}`);
-              }
-        }
-        console.log(src);
-        // this.setState({
-        //   picture: URL.createObjectURL(event)
-        // });
+                return res.json()
+            })
+            .then(images => {
+                this.setState({
+                  picture: images[0].url
+                });
+            });
       }
     
 
@@ -199,8 +197,13 @@ class HomePage extends React.Component {
 
 
     uploadPhotos() {
-        var newAsset = <Asset image_url={this.state.picture} width={this.photoInputWidth} height={this.photoInputHeight} />
-        var assetListNew = this.state.assetList.concat(newAsset);
+        var propsData = {
+            image_url: this.state.picture,
+            width: this.state.photoInputWidth,
+            height: this.state.photoInputHeight,
+        };
+        var newAsset = <Asset data={propsData} />
+        var assetListNew = [newAsset].concat(this.state.assetList);
         this.setState({
             assetList: assetListNew,
             picture: null,
@@ -208,7 +211,6 @@ class HomePage extends React.Component {
             photoInputWidth: 0
         });
         this.modalCloseImage();
-        console.log(this.state.picture);
     }
 
     render() {
@@ -267,12 +269,12 @@ class HomePage extends React.Component {
                                 label=""
                                 buttonText="Select Photos"
                                 onChange={this.onDrop}
-                                imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg"]}
+                                imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg", ".jpeg"]}
                                 maxFileSize={1048576}
                                 fileSizeError=" file size is too big"
                                 singleImage={true}
                             />
-                            <label> Enter Height </label>
+                            <label> Enter Height (in inches) </label>
                             <input 
                                     type="number"
                                     value={this.state.photoInputHeight}
@@ -280,7 +282,7 @@ class HomePage extends React.Component {
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
-                            <label> Enter Width </label>
+                            <label> Enter Width (in inches) </label>
                             <input 
                                     type="number"
                                     value={this.state.photoInputWidth}

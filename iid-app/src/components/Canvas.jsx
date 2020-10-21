@@ -3,10 +3,8 @@ import { Stage, Layer, Image, Rect, Line } from 'react-konva';
 import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
-import Asset from './Asset';
-import { ProgressBar } from 'react-bootstrap';
-import Carousel from 'react-elastic-carousel';
 import TrashCanImage from './TrashCanImage';
+import '../style/AssetMenu.css';
 
 const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY }) => {
   const [img] = useImage(image.src);
@@ -151,7 +149,7 @@ const Canvas = (props) => {
           </Layer>
         </Stage>
       </div>
-            <div 
+        <div 
         onDragStart={e => {
           dragUrl.current = e.target.src;
           imgHeight.current = e.target.height;
@@ -160,6 +158,9 @@ const Canvas = (props) => {
         >
       <Layer>
         <AssetMenu assetList = {props.assetList}/>
+        {/* <Carousel itemsToShow={2}>
+              {props.assetList}
+        </Carousel> */}
       </Layer>
       </div>
     </div>
