@@ -5,14 +5,10 @@ import AssetMenu from './AssetMenu';
 import Asset from './Asset';
 import { ProgressBar } from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
-import trashCan from '../images/trashCan.jpg';
-
+import TrashCanImage from './TrashCanImage';
 
 const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY }) => {
   const [img] = useImage(image.src);
-  console.log(image);
-  console.log(height);
-  console.log(width);
   return (
     <Image
       image={img}
@@ -32,6 +28,7 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
   );
 };
 
+
 const Canvas = (props) => {
   const dragUrl = React.useRef();
   const imgHeight = React.useRef();
@@ -47,16 +44,14 @@ const Canvas = (props) => {
 
 
   const handleDragEnd = (e) => {
-    console.log(e);
     if (e.target.attrs.x > (props.width - 50) &&
     e.target.attrs.x < props.width && 
     e.target.attrs.y > 0 && 
     e.target.attrs.y < 50) {
-      console.log("trash");
       setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
         || item.src !== e.target.attrs.image.currentSrc || item.width !== e.target.attrs.width || item.height !== e.target.attrs.height)));
     } else {
-      console.log('Not trash');
+      console.log("not trash");
     }
   }
   
@@ -77,12 +72,10 @@ const Canvas = (props) => {
           stageRef.current.setPointersPositions(e);
 
           // add image
-          console.log(stageRef.current.getPointerPosition());
           if (stageRef.current.getPointerPosition().x > (props.width - 50) &&
               stageRef.current.getPointerPosition().x < props.width && 
               stageRef.current.getPointerPosition().y > 0 && 
               stageRef.current.getPointerPosition().y < 50) {
-                console.log("trash");
               } else {
                 setImages(
                   images.concat([
@@ -113,12 +106,9 @@ const Canvas = (props) => {
               height={props.height}
               fill={props.wallColor}
             />
-            <Rect
-                x={props.width - 50}
-                y={0}
-                height = {50}
-                width = {50}
-                fill = "grey"
+            <TrashCanImage
+              x = {props.width - 50}
+              y = {0}
               />
           </Layer>
           <Layer>
