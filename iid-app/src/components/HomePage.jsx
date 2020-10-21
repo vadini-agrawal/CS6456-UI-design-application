@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
 import Canvas from './Canvas';
@@ -7,7 +7,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
 import Asset from "./Asset";
-
+import DrawCanvas from './DrawCanvas';
+import {exportComponentAsJPEG, exportComponentAsPDF} from 'react-component-export-image';
+import CanvasHolder from './CanvasHolder';
 
 class HomePage extends React.Component {
 
@@ -33,8 +35,11 @@ class HomePage extends React.Component {
             photoInputHeight: 0,
             photoInputWidth: 0,
             assetList: [],
-            clearWall: false
+            clearWall: false,
+            modalDraw:false
         };
+        this.componentDrawRef = React.createRef();
+        this.componentCanvasRef = React.createRef();
         this.onDrop = this.onDrop.bind(this);
     }
 
@@ -50,6 +55,10 @@ class HomePage extends React.Component {
         this.setState({
           [name]: value
         });
+    }
+
+    onCapture = uri => {
+        console.log("do something with", uri);
     }
 
     onDrop(event) {
@@ -99,6 +108,14 @@ class HomePage extends React.Component {
         this.setState({modalImage: true});
     }
 
+    modalOpenDraw() {
+        this.setState({modalDraw: true})
+    }
+
+    modalCloseDraw() {
+        this.setState({modalDraw: false})
+    }
+
     modalCloseImage() {
         this.setState({modalImage: false});
     }
@@ -115,6 +132,10 @@ class HomePage extends React.Component {
     handleChangeColorFloor = (color, event) => {
         console.log('changing floor color');
         this.setState({modalInputFloorColor: color.hex, floorColor: color.hex});
+    }
+
+    createNewAssetFromDrawing(e) {
+
     }
 
     createInitialAssets() {
@@ -207,7 +228,7 @@ class HomePage extends React.Component {
                 <View style={{flex: 1, flexDirection: 'row'}}>
                 <div>
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
-                        <Button>Save</Button>
+                        <Button onClick ={() => exportComponentAsJPEG(this.componentCanvasRef)}>Save</Button>
                         <Button onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
                         <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
                             <div className="form-group">
@@ -273,6 +294,18 @@ class HomePage extends React.Component {
                             </View>
                             
                         </Modal>
+
+                        <Button onClick = {e => this.modalOpenDraw(e)}>Draw Asset</Button>
+                        <Modal show={this.state.modalDraw} onHide={e => this.modalCloseDraw}>
+                            <React.Fragment>
+                            <DrawCanvas ref={this.componentDrawRef} height = {this.state.canvasHeight} width = {this.state.canvasWidth} />
+                            <Button onClick ={() => exportComponentAsJPEG(this.componentDrawRef)}>Done</Button>
+                            <Button onClick = {e => this.modalCloseDraw(e)}>Cancel</Button>
+                            </React.Fragment>
+
+                        </Modal>
+
+
                         <Button onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
                         <Button onClick = {e => this.clearWall()}>Clear Wall</Button>
                     </View>
@@ -284,7 +317,7 @@ class HomePage extends React.Component {
                     ref={node => {
                         this.container = node;
                     }} >
-                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
+                <CanvasHolder ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
                 </div>
                 </View>
                 <img src={this.state.picture} />
