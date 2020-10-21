@@ -142,6 +142,9 @@ const Canvas = (props) => {
         >
       <Layer>
         <AssetMenu assetList = {props.assetList}/>
+        {/* <Carousel itemsToShow={2}>
+              {props.assetList}
+        </Carousel> */}
       </Layer>
       </div>
     </div>
