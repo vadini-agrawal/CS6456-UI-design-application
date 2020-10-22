@@ -392,7 +392,6 @@ class HomePage extends React.Component {
                 <CanvasHolder ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
                 </div>
                 </View>
-                <img src={this.state.picture} />
             </div>
         )
     }

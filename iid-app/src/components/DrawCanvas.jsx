@@ -1,19 +1,22 @@
 import * as React from "react";
-import { Stage, Layer, Line, Text } from "react-konva";
+import { Stage, Layer, Line } from "react-konva";
 import Modal from 'react-bootstrap/Modal';
 import {ChromePicker} from 'react-color';
 import {Slider} from '@material-ui/core';
-import {makeStyles, styled} from '@material-ui/core/styles';
+import {makeStyles, styled, createMuiTheme} from '@material-ui/core/styles';
+import {ThemeProvider} from "@material-ui/core/styles";
+import {View, Text} from 'react-native';
 
-const sliderStyle = makeStyles ({
+const sliderStyle = createMuiTheme ({
   root: {
-    width: 200,
+    width: 10,
   },
 });
 
 const mySlider = styled(Slider)({
   width: 200,
 })
+
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -25,7 +28,7 @@ export default class Canvas extends React.Component {
             modalInputColor: '',
             widthInput: false,
             lineWidth: 1,
-            modalWidthInput: 1,
+            inputWidth: 1,
 
         }
     }
@@ -33,7 +36,7 @@ export default class Canvas extends React.Component {
   handleMouseDown = () => {
       this._drawing = true;
       this.setState({
-        allLines: [...this.state.allLines, [this.state.lineColor, []]]
+        allLines: [...this.state.allLines, [this.state.lineColor, this.state.inputWidth, []]]
       })
   };
 
@@ -49,11 +52,12 @@ export default class Canvas extends React.Component {
     const point = stage.getPointerPosition();    
     const allLines = this.state.allLines;
     let lastLine = allLines[allLines.length - 1];
-    let lastLinePoints = lastLine[1];
+    let lastLinePoints = lastLine[2];
     let color = lastLine[0];
+    let width = lastLine[1];
     console.log("color " + color);
     lastLinePoints = lastLinePoints.concat([point.x, point.y]);
-    let newLastLine = [color, lastLinePoints];
+    let newLastLine = [color, width, lastLinePoints];
     allLines.splice(allLines.length - 1, 1, newLastLine);
       this.setState({
         allLines: allLines.concat()
@@ -85,7 +89,7 @@ export default class Canvas extends React.Component {
   handleChangeWidthPen = (event, newValue) => {
     console.log(event);
     console.log(newValue);
-    this.setState({lineWidth: [newValue]});
+    this.setState({lineWidth: newValue, inputWidth: newValue});
   }
 
 
@@ -106,21 +110,24 @@ export default class Canvas extends React.Component {
     const MySlider = styled(Slider)({
       width: 200,
     });
+    const divStyle ={
+      display: 'flex',
+      alignItems: 'center'
+    }
     return (
       <div>
+        <div style={divStyle}>
+        <Text style={{fontSize:18}}>   Pen Width    </Text>
+        <Slider max={50} style={{width: 200}}aria-label= {"Change Pen Width"} valueLabelDisplay="auto" onChange = {this.handleChangeWidthPen} value = {this.state.inputWidth} />
+        <Text>       </Text>
         <div className="form-group">
-        <button onClick={this.handleColorChangeClick}>Pick Pen Color</button>
+        <button style={{height:45, margin:15}} onClick={this.handleColorChangeClick}>Pick Pen Color</button>
         {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
         <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorPen} />
         </div> : null}
-        <div>
-        <MySlider onChange = {this.handleChangeWidthPen}></MySlider>
         </div>
-        {/* <button onClick={this.handleLineWidthChangeClick}>Pick Pen Width</button>
-        {this.state.widthInput ? <div style={colorPopover}> <div style={cover} onClick={this.handleLineWidthChangeClose} />
-        <LineWidthPicker onChange={this.handleChangeWidthPen} opacity={1} />
-        </div> : null} */}
         </div>
+        {/* </View> */}
         <Stage
           width={this.props.width}
           height={this.props.height}
@@ -132,9 +139,8 @@ export default class Canvas extends React.Component {
           }}
         >
           <Layer>
-            <Text text="Draw a thing!" />
           {this.state.allLines.map((line, i) => (
-            <Line key={i} points={line[1]} stroke={line[0]} />
+            <Line key={i} points={line[2]} stroke={line[0]} strokeWidth={line[1]}/>
           ))}
           </Layer>
         </Stage>
