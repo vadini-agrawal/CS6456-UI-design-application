@@ -27,16 +27,7 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
   );
 };
 
-const printDocument = () => {
-//   const input = document.getElementById('divToPrint');
-//   html2Canvas(input).then((canvas) => {
-//           const imgData = canvas.toDataURL('image/png');
-//           const pdf = new jsPDF();
-//           pdf.addImage(imgData, 'JPEG', 0, 0, 200, 200);
-//           // pdf.output('dataurlnewwindow');
-//           pdf.save("download.pdf");
-// });
-}
+
 
 
 const Canvas = (props) => {
@@ -45,6 +36,7 @@ const Canvas = (props) => {
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
+  const test = [10,70, 130];
   
   useEffect(() => {
     if (!images) {
@@ -76,7 +68,6 @@ const Canvas = (props) => {
   }
   return (
     <div>
-      <Button onClick = {printDocument} >Click</Button>
       <div
         id = "divToPrint"
         className = "mt4"
@@ -124,6 +115,14 @@ const Canvas = (props) => {
               x = {props.width - 50}
               y = {0}
               />
+          </Layer>
+          <Layer>
+
+            {test.map(test => {
+              var img = new window.Image();
+              img.src = "https://konvajs.org/assets/lion.png"
+              return <Image x={test} y={test} src = {img} width={50} height={50}/>
+            })}
           </Layer>
           <Layer>
 
