@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { View } from 'react-native';
 import Canvas from './Canvas';
@@ -7,7 +7,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
 import Asset from "./Asset";
-import { API_URL } from './config'
+import DrawCanvas from './DrawCanvas';
+import {exportComponentAsJPEG, exportComponentAsPDF} from 'react-component-export-image';
+import CanvasHolder from './CanvasHolder';
+import { API_URL } from './config';
+import html2canvas from 'html2canvas';
+import {jsPDF} from 'jspdf';
 
 
 class HomePage extends React.Component {
@@ -34,8 +39,14 @@ class HomePage extends React.Component {
             photoInputHeight: 0,
             photoInputWidth: 0,
             assetList: [],
-            clearWall: false
+            clearWall: false,
+            modalDraw:false,
+            drawing: null,
+            drawingInputHeight: 0,
+            drawingInputWidth: 0,
         };
+        this.componentDrawRef = React.createRef();
+        this.componentCanvasRef = React.createRef();
         this.onDrop = this.onDrop.bind(this);
     }
 
@@ -51,6 +62,43 @@ class HomePage extends React.Component {
         this.setState({
           [name]: value
         });
+    }
+
+    onCapture = uri => {
+        console.log("do something with", uri);
+    }
+
+    screenGrabber() {
+        const input = document.getElementById('draw-canvas');
+        var imgData2 = null;
+        html2canvas(input)
+        .then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            this.setState({
+                drawing: imgData
+            }, () => {
+                this.createNewAssetFromDrawing();
+            });
+            imgData2=imgData;
+            // const pdf = new jsPDF();
+            // pdf.addImage(imgData, 'PNG', 0, 0);
+            // pdf.save('download.pdf');
+            // console.log(imgData);
+            // console.log(pdf);
+            console.log("drawing");
+            console.log(imgData);
+        });
+        //this.createNewAssetFromDrawing(imgData2);
+    ;
+
+        // html2canvas([document.getElementById("draw-canvas")], {
+        //     logging: true,
+        //     useCORS: true,
+        //     onrendered: function(canvas) {
+        //         var img = canvas.toDataURL("image/jpg");
+        //         console.log(img);
+        //     }
+        // });
     }
 
     onDrop(event) {
@@ -73,7 +121,12 @@ class HomePage extends React.Component {
                 this.setState({
                   picture: images[0].url
                 });
+                console.log("picture");
+                console.log(images[0].url);
             });
+            
+            // console.log("picture");
+            // console.log(images[0].url);
       }
     
 
@@ -96,6 +149,14 @@ class HomePage extends React.Component {
         this.setState({modalImage: true});
     }
 
+    modalOpenDraw() {
+        this.setState({modalDraw: true})
+    }
+
+    modalCloseDraw() {
+        this.setState({modalDraw: false})
+    }
+
     modalCloseImage() {
         this.setState({modalImage: false});
     }
@@ -112,6 +173,27 @@ class HomePage extends React.Component {
     handleChangeColorFloor = (color, event) => {
         console.log('changing floor color');
         this.setState({modalInputFloorColor: color.hex, floorColor: color.hex});
+    }
+
+    createNewAssetFromDrawing() {
+        console.log('newasset');
+        console.log(this.state.drawing);
+        console.log("input width" + this.state.drawingInputWidth);
+        console.log("input height" + this.state.drawingInputHeight);
+        var propsData = {
+            image_url: this.state.drawing,
+            width: this.state.drawingInputWidth,
+            height: this.state.drawingInputHeight,
+        };
+        var newAsset = <Asset data={propsData} />
+        var assetListNew = [newAsset].concat(this.state.assetList);
+        this.setState({
+            assetList: assetListNew,
+            drawing: null,
+            drawingInputHeight: 0,
+            drawingInputWidth: 0
+        });
+        this.modalCloseDraw();
     }
 
     createInitialAssets() {
@@ -208,7 +290,7 @@ class HomePage extends React.Component {
                 <View style={{flex: 1, flexDirection: 'row'}}>
                 <div>
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
-                        <Button>Save</Button>
+                        <Button onClick ={() => exportComponentAsJPEG(this.componentCanvasRef)}>Save</Button>
                         <Button onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
                         <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
                             <div className="form-group">
@@ -274,18 +356,49 @@ class HomePage extends React.Component {
                             </View>
                             
                         </Modal>
+
+                        <Button onClick = {e => this.modalOpenDraw(e)}>Draw Asset</Button>
+                        <Modal show={this.state.modalDraw} onHide={e => this.modalCloseDraw}>
+                            <React.Fragment>
+                            <label> Enter Height (in inches) </label>
+                            <input 
+                                    type="number"
+                                    value={this.state.drawingInputHeight}
+                                    name="drawingInputHeight"
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control"
+                            />
+                            <label> Enter Width (in inches) </label>
+                            <input 
+                                    type="number"
+                                    value={this.state.drawingInputWidth}
+                                    name="drawingInputWidth"
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control"
+                            />
+                            <div id = "draw-canvas">
+                            <DrawCanvas ref={this.componentDrawRef} height = {this.state.canvasHeight} width = {this.state.canvasWidth} />
+                            </div>
+                            <Button onClick ={() => this.screenGrabber()}>Done</Button>
+                            <Button onClick = {e => this.modalCloseDraw(e)}>Cancel</Button>
+                            </React.Fragment>
+
+                        </Modal>
+
+
                         <Button onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
                         <Button onClick = {e => this.clearWall()}>Clear Wall</Button>
                     </View>
                 </div>
                 <div
+                    id = 'canvasHolder'
                     style={{
                         border: "2px solid grey",
                     }}
                     ref={node => {
                         this.container = node;
                     }} >
-                <Canvas width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
+                <CanvasHolder ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
                 </div>
                 </View>
                 <img src={this.state.picture} />

@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import { Stage, Layer, Image, Rect, Line } from 'react-konva';
+import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
 import TrashCanImage from './TrashCanImage';
@@ -27,12 +28,15 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
 };
 
 
+
+
 const Canvas = (props) => {
   const dragUrl = React.useRef();
   const imgHeight = React.useRef();
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
+  const test = [10,70, 130];
   
   useEffect(() => {
     if (!images) {
@@ -65,6 +69,8 @@ const Canvas = (props) => {
   return (
     <div>
       <div
+        id = "divToPrint"
+        className = "mt4"
         onDrop={e => {
           // register event position
           stageRef.current.setPointersPositions(e);
@@ -97,6 +103,7 @@ const Canvas = (props) => {
           ref={stageRef}
         >
           <Layer>
+
             <Rect 
               x={0}
               y={0}
@@ -108,6 +115,14 @@ const Canvas = (props) => {
               x = {props.width - 50}
               y = {0}
               />
+          </Layer>
+          <Layer>
+
+            {test.map(test => {
+              var img = new window.Image();
+              img.src = "https://konvajs.org/assets/lion.png"
+              return <Image x={test} y={test} src = {img} width={50} height={50}/>
+            })}
           </Layer>
           <Layer>
 
