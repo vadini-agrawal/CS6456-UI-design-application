@@ -90,15 +90,6 @@ class HomePage extends React.Component {
         });
         //this.createNewAssetFromDrawing(imgData2);
     ;
-
-        // html2canvas([document.getElementById("draw-canvas")], {
-        //     logging: true,
-        //     useCORS: true,
-        //     onrendered: function(canvas) {
-        //         var img = canvas.toDataURL("image/jpg");
-        //         console.log(img);
-        //     }
-        // });
     }
 
     onDrop(event) {
