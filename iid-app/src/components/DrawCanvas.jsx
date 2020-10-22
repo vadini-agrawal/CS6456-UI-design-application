@@ -1,21 +1,11 @@
 import * as React from "react";
 import { Stage, Layer, Line } from "react-konva";
-import Modal from 'react-bootstrap/Modal';
+import {Button} from 'react-bootstrap';
 import {ChromePicker} from 'react-color';
 import {Slider} from '@material-ui/core';
-import {makeStyles, styled, createMuiTheme} from '@material-ui/core/styles';
-import {ThemeProvider} from "@material-ui/core/styles";
-import {View, Text} from 'react-native';
+import {Text} from 'react-native';
+import html2canvas from 'html2canvas';
 
-const sliderStyle = createMuiTheme ({
-  root: {
-    width: 10,
-  },
-});
-
-const mySlider = styled(Slider)({
-  width: 200,
-})
 
 
 export default class Canvas extends React.Component {
@@ -27,8 +17,8 @@ export default class Canvas extends React.Component {
             colorInput : false,
             modalInputColor: '',
             widthInput: false,
-            lineWidth: 1,
-            inputWidth: 1,
+            lineWidth: 10,
+            inputWidth: 10,
 
         }
     }
@@ -55,7 +45,6 @@ export default class Canvas extends React.Component {
     let lastLinePoints = lastLine[2];
     let color = lastLine[0];
     let width = lastLine[1];
-    console.log("color " + color);
     lastLinePoints = lastLinePoints.concat([point.x, point.y]);
     let newLastLine = [color, width, lastLinePoints];
     allLines.splice(allLines.length - 1, 1, newLastLine);
@@ -87,12 +76,18 @@ export default class Canvas extends React.Component {
   }
   
   handleChangeWidthPen = (event, newValue) => {
-    console.log(event);
-    console.log(newValue);
     this.setState({lineWidth: newValue, inputWidth: newValue});
   }
 
 
+  screenGrabber() {
+          const input = document.getElementsByClassName('draw-canvas')[0];
+          html2canvas(input)
+          .then((canvas) => {
+              const imgData = canvas.toDataURL('image/png');
+              this.props.action(imgData);
+          });
+      }
     
 
   render() {
@@ -107,9 +102,6 @@ export default class Canvas extends React.Component {
       bottom: '0px',
       left: '0px',
     }
-    const MySlider = styled(Slider)({
-      width: 200,
-    });
     const divStyle ={
       display: 'flex',
       alignItems: 'center'
@@ -128,6 +120,7 @@ export default class Canvas extends React.Component {
         </div>
         </div>
         {/* </View> */}
+        <div id="draw-canvas" name="draw-canvas" className="draw-canvas">
         <Stage
           width={this.props.width}
           height={this.props.height}
@@ -144,6 +137,8 @@ export default class Canvas extends React.Component {
           ))}
           </Layer>
         </Stage>
+        </div>
+        <Button style={{width:500}} onClick ={() => this.screenGrabber()}>Done</Button>
       </div>
     )
   }
