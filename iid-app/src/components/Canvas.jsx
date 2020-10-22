@@ -46,8 +46,8 @@ const Canvas = (props) => {
 
 
   const handleDragEnd = (e) => {
-    if (e.target.attrs.x > (props.width - 50) &&
-    e.target.attrs.x < props.width && 
+    if (e.target.attrs.x > (0) &&
+    e.target.attrs.x < (props.width - 50)&& 
     e.target.attrs.y > 0 && 
     e.target.attrs.y < 50) {
       setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
@@ -76,8 +76,8 @@ const Canvas = (props) => {
           stageRef.current.setPointersPositions(e);
 
           // add image
-          if (stageRef.current.getPointerPosition().x > (props.width - 50) &&
-              stageRef.current.getPointerPosition().x < props.width && 
+          if (stageRef.current.getPointerPosition().x > (0) &&
+              stageRef.current.getPointerPosition().x < (props.width - 50) && 
               stageRef.current.getPointerPosition().y > 0 && 
               stageRef.current.getPointerPosition().y < 50) {
               } else {
@@ -112,7 +112,7 @@ const Canvas = (props) => {
               fill={props.wallColor}
             />
             <TrashCanImage
-              x = {props.width - 50}
+              x = {0}
               y = {0}
               />
           </Layer>
