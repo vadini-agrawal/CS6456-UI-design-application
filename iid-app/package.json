@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -20,6 +21,7 @@
     "react-image": "^4.0.3",
     "react-images-upload": "^1.2.8",
     "react-konva": "^16.13.0-6",
+    "react-line-width-picker": "^1.0.0",
     "react-native": "^0.63.3",
     "react-native-view-shot": "^3.1.2",
     "react-native-web": "^0.13.18",
