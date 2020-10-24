@@ -107,11 +107,11 @@ class HomePage extends React.Component {
                 return res.json()
             })
             .then(images => {
-                this.setState({
-                  picture: images[0].url
-                });
-                console.log("picture");
-                console.log(images[0].url);
+                if (images[0].url !== "") {
+                    this.setState({
+                        picture: images[0].url
+                    });
+                }
             });
       }
     
@@ -169,31 +169,32 @@ class HomePage extends React.Component {
         var assetListNew = [newAsset].concat(this.state.assetList);
         this.setState({
             assetList: assetListNew,
-            drawingInputHeight: 50,
-            drawingInputWidth: 50
+            drawingInputHeight: 10,
+            drawingInputWidth: 10
         });
         this.modalCloseDraw();
     }
 
     createInitialAssets() {
-        var propsData = {
-            image_url: 'https://konvajs.org/assets/lion.png',
-            width: 10,
-            height: 8
-        };
-        var propsData1 = {
-            image_url: 'https://konvajs.org/assets/lion.png',
-            width: 14,
-            height: 7
-        };
-        var propsData2 = {
-            image_url: 'https://konvajs.org/assets/lion.png',
-            width: 8,
-            height: 14
-        };
-        var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />
-        ];
-        this.setState({assetList: list})
+        // var propsData = {
+        //     image_url: 'https://konvajs.org/assets/lion.png',
+        //     width: 10,
+        //     height: 8
+        // };
+        // var propsData1 = {
+        //     image_url: 'https://konvajs.org/assets/lion.png',
+        //     width: 14,
+        //     height: 7
+        // };
+        // var propsData2 = {
+        //     image_url: 'https://konvajs.org/assets/lion.png',
+        //     width: 8,
+        //     height: 14
+        // };
+        // var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />
+        // ];
+        var list = [];
+        this.setState({assetList: list});
     }
 
 
@@ -236,20 +237,24 @@ class HomePage extends React.Component {
 
 
     uploadPhotos() {
-        var propsData = {
-            image_url: this.state.picture,
-            width: this.state.photoInputWidth,
-            height: this.state.photoInputHeight,
-        };
-        var newAsset = <Asset data={propsData} />
-        var assetListNew = [newAsset].concat(this.state.assetList);
-        this.setState({
-            assetList: assetListNew,
-            picture: null,
-            photoInputHeight: 0,
-            photoInputWidth: 0
-        });
-        this.modalCloseImage();
+        if (this.state.picture != "") {
+            var propsData = {
+                image_url: this.state.picture,
+                width: Number(this.state.photoInputWidth),
+                height: Number(this.state.photoInputHeight),
+            };
+            var newAsset = <Asset data={propsData} />
+            var assetListNew = [newAsset].concat(this.state.assetList);
+            this.setState({
+                assetList: assetListNew,
+                picture: null,
+                photoInputHeight: 0,
+                photoInputWidth: 0
+            });
+            this.modalCloseImage();
+        } else {
+            console.log("Something went wrong importing the image");
+        }
     }
 
     render() {
