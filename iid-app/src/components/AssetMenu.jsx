@@ -14,7 +14,7 @@ class AssetMenu extends React.Component {
     //         hasImages : false,
     //         assetList : this.props.assetList,
     //     };
-    // } 
+    //     } 
 
     // componentWillUpdate() {
     //     this.setState({
