@@ -40,7 +40,8 @@ class HomePage extends React.Component {
             modalDraw:false,
             drawing: null,
             drawingInputHeight: 50,
-            drawingInputWidth: 50
+            drawingInputWidth: 50,
+            isWallAsset: "true", 
         };
         this.componentDrawRef = React.createRef();
         this.componentCanvasRef = React.createRef();
@@ -50,13 +51,15 @@ class HomePage extends React.Component {
 
     componentWillMount() {
         this.createInitialAssets();
+        console.log(this.state.assetList);
     }
 
     handleChange(e) {
         const target = e.target;
         const name = target.name;
         const value = target.value;
-    
+        // console.log(name);
+        // console.log(value);
         this.setState({
           [name]: value
         });
@@ -160,40 +163,48 @@ class HomePage extends React.Component {
     }
 
     createNewAssetFromDrawing(img) {
+        if (this.state.isWallAsset === "true") {
+            var wallAssetBool = true;
+        } else {
+            var wallAssetBool = false;
+        }
         var propsData = {
             image_url: img,
             width: this.state.drawingInputWidth,
             height: this.state.drawingInputHeight,
+            isWallAsset: wallAssetBool
         };
         var newAsset = <Asset data={propsData} />
         var assetListNew = [newAsset].concat(this.state.assetList);
         this.setState({
             assetList: assetListNew,
             drawingInputHeight: 10,
-            drawingInputWidth: 10
+            drawingInputWidth: 10,
+            isWallAsset: true
         });
         this.modalCloseDraw();
     }
 
     createInitialAssets() {
-        // var propsData = {
-        //     image_url: 'https://konvajs.org/assets/lion.png',
-        //     width: 10,
-        //     height: 8
-        // };
-        // var propsData1 = {
-        //     image_url: 'https://konvajs.org/assets/lion.png',
-        //     width: 14,
-        //     height: 7
-        // };
-        // var propsData2 = {
-        //     image_url: 'https://konvajs.org/assets/lion.png',
-        //     width: 8,
-        //     height: 14
-        // };
-        // var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />
-        // ];
-        var list = [];
+        var propsData = {
+            image_url: 'https://konvajs.org/assets/lion.png',
+            width: 10,
+            height: 8,
+            isWallAsset: true
+        };
+        var propsData1 = {
+            image_url: 'https://konvajs.org/assets/lion.png',
+            width: 14,
+            height: 7,
+            isWallAsset: true
+        };
+        var propsData2 = {
+            image_url: 'https://konvajs.org/assets/lion.png',
+            width: 8,
+            height: 14,
+            isWallAsset: false
+        };
+        var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />];
         this.setState({assetList: list});
     }
 
@@ -238,21 +249,29 @@ class HomePage extends React.Component {
 
     uploadPhotos() {
         if (this.state.picture != "") {
+            if (this.state.isWallAsset === "true") {
+                var wallAssetBool = true;
+            } else {
+                var wallAssetBool = false;
+            }
             var propsData = {
                 image_url: this.state.picture,
                 width: Number(this.state.photoInputWidth),
                 height: Number(this.state.photoInputHeight),
+                isWallAsset: wallAssetBool
             };
             var newAsset = <Asset data={propsData} />
             var assetListNew = [newAsset].concat(this.state.assetList);
             this.setState({
                 assetList: assetListNew,
                 picture: null,
-                photoInputHeight: 0,
-                photoInputWidth: 0
+                photoInputHeight: 10,
+                photoInputWidth: 10,
+                isWallAsset: true
             });
             this.modalCloseImage();
         } else {
+            // TODO: Add a toast that shows that the image couldn't be imported 
             console.log("Something went wrong importing the image");
         }
     }
@@ -311,7 +330,7 @@ class HomePage extends React.Component {
                                 withIcon={false}
                                 withPreview={true}
                                 label=""
-                                buttonText="Select Photos"
+                                buttonText="Select Photo"
                                 onChange={this.onDrop}
                                 imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg", ".jpeg"]}
                                 maxFileSize={1048576}
@@ -334,6 +353,13 @@ class HomePage extends React.Component {
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
+                            <label> Asset type </label>
+                            <select name="isWallAsset" 
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control">
+                                <option value="true" selected>Wall Asset</option>
+                                <option value="false">Floor Asset</option>
+                            </select>
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <Button onClick= {e => this.uploadPhotos(e)}>Done</Button>
                                 <Button onClick= {e => this.modalCloseImage(e)}>Cancel</Button>
@@ -360,12 +386,18 @@ class HomePage extends React.Component {
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
+                            <label> Asset type </label>
+                            <select name="isWallAsset" 
+                                    onChange={e => this.handleChange(e)}
+                                    className="form-control">
+                                <option value="true" selected>Wall Asset</option>
+                                <option value="false">Floor Asset</option>
+                            </select>
                             <div id = "draw-canvas">
                             <DrawCanvas action={this.createNewAssetFromDrawing} ref={this.componentDrawRef} height = {this.state.canvasHeight} width = {500} />
                             </div>
                             <Button onClick = {e => this.modalCloseDraw(e)}>Cancel</Button>
                             </React.Fragment>
-
                         </Modal>
                         <Button onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
                         <Button onClick = {e => this.clearWall()}>Clear Wall</Button>
