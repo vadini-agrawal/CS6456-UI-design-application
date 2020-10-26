@@ -1,16 +1,24 @@
 import React, {useEffect} from 'react';
 import { Stage, Layer, Image, Rect, Line } from 'react-konva';
-import {Button} from "react-bootstrap";
+// import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
+import {Spring, useSpring, animated} from 'react-spring';
 import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
 import Modal from 'react-bootstrap/Modal';
 
-const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick }) => {
+const URLImage = ({key, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
   const [img] = useImage(image.src);
+  // let image_node = React.useRef();
+  // const y_coord = image.y;
+  // const [spring] = useSpring({y: 10, from: {y: y_coord}})
+  // const image_component = 
+  // const AnimatedImage = animated(image_component)
+
   return (
     <Image
+      key={key}
       image={img}
       x={image.x}
       y={image.y}
@@ -30,18 +38,18 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
 };
 
 
-
-
 const Canvas = (props) => {
   const dragUrl = React.useRef();
   const imgHeight = React.useRef();
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
+  const isWallAsset = React.useRef();
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
   const [modalChangeSize, changeSize] = React.useState(false);
   const [modalInputHeight, changeHeight] = React.useState(0);
   const [modalInputWidth, changeWidth] = React.useState(0);
+  const image_node = React.useRef();
   
   useEffect(() => {
     if (!images) {
@@ -64,6 +72,12 @@ const Canvas = (props) => {
     } else {
       console.log("not trash");
     }
+    // console.log(this.image_node);
+    // this.image_node.to({
+    //   scaleX: Math.random() + 1.4,
+    //   scaleY: Math.random() + 1.4,
+    //   duration: 0.2
+    // });
   }
   
   const handleDragStart = (e) => {
@@ -79,6 +93,47 @@ const Canvas = (props) => {
   }
 
   
+  const handleOnDrop = (e) => {
+
+    console.log(image_node.current);
+    // register event position
+    stageRef.current.setPointersPositions(e);
+
+    // add image
+    if (stageRef.current.getPointerPosition().x > (0) &&
+        stageRef.current.getPointerPosition().x < (props.width - 50) && 
+        stageRef.current.getPointerPosition().y > 0 && 
+        stageRef.current.getPointerPosition().y < 50) 
+    {
+    } else {
+      // if (isWallAsset.current === "false") {
+      //   setImages(
+      //     images.concat([
+      //       {
+      //         x: stageRef.current.getPointerPosition().x,
+      //         y: props.height - imgHeight.current + 3,
+      //         src: dragUrl.current,
+      //         height: imgHeight.current,
+      //         width: imgWidth.current,
+      //         iswallasset: isWallAsset.current,
+      //       }
+      //     ])
+      //   );
+      // } else {
+        setImages(
+          images.concat([
+            {
+              ...stageRef.current.getPointerPosition(),
+              src: dragUrl.current,
+              height: imgHeight.current,
+              width: imgWidth.current,
+              iswallasset: isWallAsset.current,
+            }
+          ])
+        );      // }
+    }
+  }
+
   if (props.clearWall == true && images.length != 0){
     images.splice(0, images.length);
   }
@@ -87,29 +142,7 @@ const Canvas = (props) => {
       <div
         id = "divToPrint"
         className = "mt4"
-        onDrop={e => {
-          // register event position
-          stageRef.current.setPointersPositions(e);
-
-          // add image
-          if (stageRef.current.getPointerPosition().x > (0) &&
-              stageRef.current.getPointerPosition().x < (props.width - 50) && 
-              stageRef.current.getPointerPosition().y > 0 && 
-              stageRef.current.getPointerPosition().y < 50) {
-              } else {
-                setImages(
-                  images.concat([
-                    {
-                      ...stageRef.current.getPointerPosition(),
-                      src: dragUrl.current,
-                      height: imgHeight.current,
-                      width: imgWidth.current
-                    }
-                  ])
-                );
-              }
-            }
-            }
+        onDrop={handleOnDrop}
         onDragOver={e => e.preventDefault()}
       >
         <Stage
@@ -118,62 +151,62 @@ const Canvas = (props) => {
           style={{ border: '1px solid grey' }}
           ref={stageRef}
         >
-          <Layer>
-
-            <Rect 
-              x={0}
-              y={0}
-              width={props.width}
-              height={props.height}
-              fill={props.wallColor}
+        <Layer>
+          <Rect 
+            x={0}
+            y={0}
+            width={props.width}
+            height={props.height}
+            fill={props.wallColor}
+          />
+          <TrashCanImage
+            x = {0}
+            y = {0}
             />
-            <TrashCanImage
-              x = {0}
-              y = {0}
-              />
-          </Layer>
-          <Layer>
-            {test.map(test => {
-              var img = new window.Image();
-              img.src = "https://konvajs.org/assets/lion.png"
-              return <Image x={test} y={test} src = {img} width={50} height={50}/>
-            })}
-          </Layer>
-          <Layer>
-
-            {images.map(image => {
-                return <URLImage image={image} height={image.height} width={image.width} onDragEnd={handleDragEnd} onDragStart={handleDragStart} originalX={image.x} originalY={image.y} onDblClick={handleDoubleClk}/>;
-            })}
-          </Layer>
-          <Layer>
-            <Rect
-              x={0}
-              y={props.height - 32}
-              height = {2}
-              width = {props.width}
-              fill = "white"
-              />
-            <Rect 
-              x={0}
-              y={props.height - 30}
-              width = {props.width}
-              height = {30}
-              fill={props.floorColor}
-              />
-          </Layer>
-        </Stage>
+        </Layer>
+        <Layer>
+        {images.map(image => {
+            return <URLImage 
+                image={image} 
+                height={image.height} 
+                width={image.width} 
+                onDragEnd={handleDragEnd} 
+                onDragStart={handleDragStart} 
+                originalX={image.x} 
+                originalY={image.y} 
+                onDblClick={handleDoubleClk}/>;
+        })}
+        </Layer>
+        <Layer>
+          <Rect
+            x={0}
+            y={props.height - 32}
+            height = {2}
+            width = {props.width}
+            fill = "white"
+            />
+          <Rect 
+            x={0}
+            y={props.height - 30}
+            width = {props.width}
+            height = {30}
+            fill={props.floorColor}
+            />
+        </Layer>
+      </Stage>
       </div>
         <div 
         onDragStart={e => {
+          image_node.current = e.target;
           dragUrl.current = e.target.src;
           imgHeight.current = e.target.height;
           imgWidth.current = e.target.width;
-        }}
-        >
-      <Layer>
-        <AssetMenu assetList = {props.assetList}/>
-      </Layer>
-      </div>
+          isWallAsset.current = e.target.dataset.iswallasset;
+        }}>
+        <Layer>
+          <AssetMenu assetList = {props.assetList}/>
+        </Layer>
+        </div>
     </div>
   );
 };
