@@ -10,7 +10,12 @@ import DrawCanvas from './DrawCanvas';
 import {exportComponentAsJPEG, exportComponentAsPDF} from 'react-component-export-image';
 import CanvasHolder from './CanvasHolder';
 import { API_URL } from './config';
-
+import circle from '../images/circlepng.png';
+import dresser from '../images/dresser.png';
+import lamp from '../images/lamp.png';
+import plant from '../images/plant.png';
+import square from '../images/square.png';
+import tv from '../images/tv.png';
 
 class HomePage extends React.Component {
 
@@ -176,24 +181,44 @@ class HomePage extends React.Component {
     }
 
     createInitialAssets() {
-        // var propsData = {
-        //     image_url: 'https://konvajs.org/assets/lion.png',
-        //     width: 10,
-        //     height: 8
-        // };
-        // var propsData1 = {
-        //     image_url: 'https://konvajs.org/assets/lion.png',
-        //     width: 14,
-        //     height: 7
-        // };
-        // var propsData2 = {
-        //     image_url: 'https://konvajs.org/assets/lion.png',
-        //     width: 8,
-        //     height: 14
-        // };
-        // var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />
-        // ];
-        var list = [];
+        var propsData = {
+            image_url: dresser,
+            width: 10,
+            height: 10,
+            isWallAsset: false
+        };
+        var propsData1 = {
+            image_url: lamp,
+            width: 10,
+            height: 10,
+            isWallAsset: false
+        };
+        var propsData2 = {
+            image_url: circle,
+            width: 10,
+            height: 10,
+            isWallAsset: true
+        };
+        var propsData3 = {
+            image_url: plant,
+            width: 10,
+            height: 10,
+            isWallAsset: false
+        };
+        var propsData4 = {
+            image_url: square,
+            width: 10,
+            height: 10, 
+            isWallAsset: true
+        };
+        var propsData5 = {
+            image_url: tv,
+            width: 10,
+            height: 10,
+            isWallAsset: false
+        };
+        var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />, <Asset data={propsData3} />, <Asset data={propsData4} />, <Asset data={propsData5} />
+        ];
         this.setState({assetList: list});
     }
 
