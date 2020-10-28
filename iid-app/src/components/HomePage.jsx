@@ -45,12 +45,18 @@ class HomePage extends React.Component {
             modalDraw:false,
             drawing: null,
             drawingInputHeight: 50,
-            drawingInputWidth: 50
+            drawingInputWidth: 50,
+            modalAssetSize: false,
+            changeAssetHeight: 0,
+            changeAssetWidth: 0,
+            modalAssetTarget: null,
+            submitAssetChange: false,
         };
         this.componentDrawRef = React.createRef();
         this.componentCanvasRef = React.createRef();
         this.onDrop = this.onDrop.bind(this);
         this.createNewAssetFromDrawing = this.createNewAssetFromDrawing.bind(this);
+        this.modalOpenChangeAssetSize = this.modalOpenChangeAssetSize.bind(this);
     }
 
     componentWillMount() {
@@ -130,6 +136,30 @@ class HomePage extends React.Component {
         });
         this.modalCloseWall();
         this.forceUpdate();
+    }
+
+    handleSubmitAssetModal(e) {
+        var attrs = this.state.modalAssetTarget.attrs;
+        attrs.height = parseInt(this.state.changeAssetHeight);
+        attrs.width = parseInt(this.state.changeAssetWidth);
+        var target = this.state.modalAssetTarget;
+        target.attrs = attrs;
+        this.setState({modalAssetTarget: target, submitAssetChange: true});
+        this.modalCloseSize();
+        setTimeout(function() { 
+            this.setState({submitAssetChange: false})
+        }.bind(this), 5)
+
+    }
+
+    modalCloseSize() {
+        this.setState({modalAssetSize:false});
+        this.forceUpdate();
+
+    }
+
+    modalOpenChangeAssetSize(target) {
+        this.setState({modalAssetSize: true, modalAssetTarget: target, changeAssetHeight: target.attrs.height, changeAssetWidth: target.attrs.width});
     }
 
     modalOpenWall() {
@@ -404,7 +434,33 @@ class HomePage extends React.Component {
                     ref={node => {
                         this.container = node;
                     }} >
-                <CanvasHolder ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} clearWall={this.state.clearWall}/>
+                <Modal show={this.state.modalAssetSize} onHide={e => this.modalCloseSize(e)}>
+                    <div className="form-group">
+                    <label>Enter Height</label>
+                    <input 
+                        type="number"
+                        value={this.state.changeAssetHeight}
+                        name="changeAssetHeight"
+                        onChange={e => this.handleChange(e)}
+                        className="form-control"
+                    />
+                    <label>Enter Width</label>
+                    <input 
+                        type="number"
+                        value={this.state.changeAssetWidth}
+                        name="changeAssetWidth"
+                        onChange={e => this.handleChange(e)}
+                        className="form-control"
+                    />
+                    <button onClick={e => this.handleSubmitAssetModal(e)} type="button">
+                    Save
+                    </button>
+                    </div>
+                </Modal>       
+                <CanvasHolder 
+                    ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} 
+                    floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} 
+                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize} submitAssetChange={this.state.submitAssetChange}/>
                 </div>
                 </View>
             </div>
