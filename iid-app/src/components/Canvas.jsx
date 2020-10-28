@@ -5,8 +5,9 @@ import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
 import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
+import Modal from 'react-bootstrap/Modal';
 
-const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY }) => {
+const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick }) => {
   const [img] = useImage(image.src);
   return (
     <Image
@@ -23,6 +24,7 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
       onDragStart = {onDragStart}
       originalX = {originalX}
       originalY = {originalY}
+      onDblClick = {onDblClick}
     />
   );
 };
@@ -37,6 +39,9 @@ const Canvas = (props) => {
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
+  const [modalChangeSize, changeSize] = React.useState(false);
+  const [modalInputHeight, changeHeight] = React.useState(0);
+  const [modalInputWidth, changeWidth] = React.useState(0);
   
   useEffect(() => {
     if (!images) {
@@ -44,6 +49,10 @@ const Canvas = (props) => {
     }
 }, [images]);
 
+
+  if(props.submitAssetChange) {
+    console.log('submitted');
+  }
 
   const handleDragEnd = (e) => {
     if (e.target.attrs.x > (0) &&
@@ -60,6 +69,13 @@ const Canvas = (props) => {
   const handleDragStart = (e) => {
     console.log("Drag Start");
     console.log(e);
+  }
+
+  const handleDoubleClk = (e) => {
+    console.log("doubleClick");
+    console.log(e);
+    props.assetSizeHandler(e.currentTarget);
+    changeSize(true);
   }
 
   
@@ -117,7 +133,6 @@ const Canvas = (props) => {
               />
           </Layer>
           <Layer>
-
             {test.map(test => {
               var img = new window.Image();
               img.src = "https://konvajs.org/assets/lion.png"
@@ -127,7 +142,7 @@ const Canvas = (props) => {
           <Layer>
 
             {images.map(image => {
-                return <URLImage image={image} height={image.height} width={image.width} onDragEnd={handleDragEnd} onDragStart={handleDragStart} originalX={image.x} originalY={image.y}/>;
+                return <URLImage image={image} height={image.height} width={image.width} onDragEnd={handleDragEnd} onDragStart={handleDragStart} originalX={image.x} originalY={image.y} onDblClick={handleDoubleClk}/>;
             })}
           </Layer>
           <Layer>
