@@ -148,7 +148,7 @@ class HomePage extends React.Component {
         this.modalCloseSize();
         setTimeout(function() { 
             this.setState({submitAssetChange: false})
-        }.bind(this), 5)
+        }.bind(this), 1)
 
     }
 
@@ -460,7 +460,7 @@ class HomePage extends React.Component {
                 <CanvasHolder 
                     ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} 
                     floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} 
-                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize} submitAssetChange={this.state.submitAssetChange}/>
+                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize} submitAssetChange={this.state.submitAssetChange} newAssetTarget={this.state.modalAssetTarget}/>
                 </div>
                 </View>
             </div>

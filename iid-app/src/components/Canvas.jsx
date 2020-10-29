@@ -29,19 +29,17 @@ const URLImage = ({ image, height, width, onDragEnd, onDragStart, originalX, ori
   );
 };
 
+const {forwardRef, useRef, finishAssetSubmit} = React;
 
 
-
-const Canvas = (props) => {
+const Canvas = forwardRef((props, ref) => {
   const dragUrl = React.useRef();
   const imgHeight = React.useRef();
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
-  const [modalChangeSize, changeSize] = React.useState(false);
-  const [modalInputHeight, changeHeight] = React.useState(0);
-  const [modalInputWidth, changeWidth] = React.useState(0);
+  const [oldAssetItem, changeOldAssetItem] = React.useState();
   
   useEffect(() => {
     if (!images) {
@@ -50,15 +48,28 @@ const Canvas = (props) => {
 }, [images]);
 
 
-  if(props.submitAssetChange) {
+  const finishAssetSubmit = ((ref, () => {
     console.log('submitted');
-  }
+    console.log(oldAssetItem);
+    console.log(props.newAssetTarget);
+      setImages(images.concat([
+        {
+          x:oldAssetItem.x,
+          y:oldAssetItem.y,
+          src: oldAssetItem.src,
+          height: props.newAssetTarget.attrs.height,
+          width: props.newAssetTarget.attrs.height,
+        }
+      ]));
+
+  }));
 
   const handleDragEnd = (e) => {
     if (e.target.attrs.x > (0) &&
     e.target.attrs.x < (props.width - 50)&& 
     e.target.attrs.y > 0 && 
     e.target.attrs.y < 50) {
+      console.log(images);
       setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
         || item.src !== e.target.attrs.image.currentSrc || item.width !== e.target.attrs.width || item.height !== e.target.attrs.height)));
     } else {
@@ -74,8 +85,14 @@ const Canvas = (props) => {
   const handleDoubleClk = (e) => {
     console.log("doubleClick");
     console.log(e);
+    console.log(images);
+    var attrs = e.currentTarget.attrs;
+    var oldAsset = {x:attrs.originalX, y:attrs.originalY, src:attrs.image.src, width:attrs.width, height:attrs.height};
+    changeOldAssetItem(oldAsset);
+    setImages(images.filter(item => (item.x !== attrs.originalX || item.y !== attrs.originalY 
+      || item.src !== attrs.image.currentSrc || item.width !== attrs.width || item.height !== attrs.height)));
     props.assetSizeHandler(e.currentTarget);
-    changeSize(true);
+    
   }
 
   
@@ -176,6 +193,6 @@ const Canvas = (props) => {
       </div>
     </div>
   );
-};
+});
 
 export default Canvas;
