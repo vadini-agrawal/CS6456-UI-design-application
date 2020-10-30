@@ -133,13 +133,14 @@ const Canvas = (props) => {
     currentImageResizing.attrs.width = parseInt(newWidth);
     console.log("imagesTemp");
     console.log(imagesTemp);
-    var imagesTemp2 = imagesTemp.concat([{
+    var imagesTemp2 = [{
       x: currentImageResizing.attrs.x,
       y: currentImageResizing.attrs.y,
       src: currentImageResizing.attrs.image.currentSrc,
       width: currentImageResizing.attrs.width,
       height: currentImageResizing.attrs.height
-    }]);
+    }];
+    imagesTemp2 = imagesTemp2.concat(imagesTemp);
     console.log("imagesTemp2");
     console.log(imagesTemp2);
     
@@ -168,7 +169,7 @@ const Canvas = (props) => {
     }]));
   }
   
-  const asyncHandleSizeSubmit = (e) =>setTimeout(handleSizeSubmit, 0);
+  // const asyncHandleSizeSubmit = (e) =>setTimeout(handleSizeSubmit, 0);
 
   const handleOnDrop = (e) => {
 
@@ -229,7 +230,7 @@ const Canvas = (props) => {
         <Input value={newWidth} handleChange={handleChangeWidth} ref={ref} />
         <label>Enter Height</label>
         <Input value={newHeight} handleChange={handleChangeHeight} ref={ref} />
-        <button onClick={e => asyncHandleSizeSubmit(e)} type="button">
+        <button onClick={e => handleSizeSubmit(e)} type="button">
           Save
         </button>
         </Modal>
