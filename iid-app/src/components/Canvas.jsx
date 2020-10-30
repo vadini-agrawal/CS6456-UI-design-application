@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, forwardRef, useRef} from 'react';
 import { Stage, Layer, Image, Rect, Line } from 'react-konva';
 // import {Button} from "react-bootstrap";
 import useImage from 'use-image';
@@ -37,6 +37,15 @@ const URLImage = ({key, image, height, width, onDragEnd, onDragStart, originalX,
   );
 };
 
+const Input = forwardRef(({value, handleChange}, ref) => (
+  <input
+    type="number"
+    value={value}
+    onChange={handleChange}
+    ref={ref}
+    />
+));
+
 
 const Canvas = (props) => {
   const dragUrl = React.useRef();
@@ -47,10 +56,20 @@ const Canvas = (props) => {
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
   const [modalChangeSize, changeSize] = React.useState(false);
-  const [modalInputHeight, changeHeight] = React.useState(0);
-  const [modalInputWidth, changeWidth] = React.useState(0);
   const image_node = React.useRef();
-  
+  const [newWidth, changeWidth] = React.useState(0);
+  const [newHeight, changeHeight] = React.useState(0);
+  const [currentImageResizing, changeImageforSizing] = React.useState();
+  const [oldHeight, changeOldHeight] = React.useState(0);
+  const [oldWidth, changeOldWidth] = React.useState(0);
+
+  const handleChangeWidth = event => changeWidth(event.target.value);
+  const handleChangeHeight = event => changeHeight(event.target.value);
+
+  const ref = React.useRef();
+
+  // useEffect(() => ref.current.focus(), []);
+
   useEffect(() => {
     if (!images) {
       console.log('run something here');
@@ -88,11 +107,69 @@ const Canvas = (props) => {
   const handleDoubleClk = (e) => {
     console.log("doubleClick");
     console.log(e);
-    props.assetSizeHandler(e.currentTarget);
+    // props.assetSizeHandler(e.currentTarget);
+    changeHeight(e.currentTarget.attrs.height);
+    changeWidth(e.currentTarget.attrs.width);
+    changeOldHeight(e.currentTarget.attrs.height);
+    changeOldWidth(e.currentTarget.attrs.width);
+    changeImageforSizing(e.currentTarget);
     changeSize(true);
   }
 
+  const handleModalClose = (e) => {
+    changeSize(false);
+  }
+
+  const  handleSizeSubmit = (e) => {
+    console.log(newWidth);
+    console.log(newHeight);
+    var imagesTemp = images.filter(item => (item.x !== currentImageResizing.attrs.x|| item.y !== currentImageResizing.attrs.y
+      || item.src !== currentImageResizing.attrs.image.currentSrc || item.width !== currentImageResizing.attrs.width 
+      || item.height !== currentImageResizing.attrs.height));
+
+    console.log("currentImage");
+    console.log(currentImageResizing);
+    currentImageResizing.attrs.height = parseInt(newHeight);
+    currentImageResizing.attrs.width = parseInt(newWidth);
+    console.log("imagesTemp");
+    console.log(imagesTemp);
+    var imagesTemp2 = imagesTemp.concat([{
+      x: currentImageResizing.attrs.x,
+      y: currentImageResizing.attrs.y,
+      src: currentImageResizing.attrs.image.currentSrc,
+      width: currentImageResizing.attrs.width,
+      height: currentImageResizing.attrs.height
+    }]);
+    console.log("imagesTemp2");
+    console.log(imagesTemp2);
+    
+    setImages(imagesTemp2);
+
+
+    console.log(images);
+    // reloadImages();
+    // setImages(images.concat([{
+    //   x: currentImageResizing.attrs.x,
+    //   y: currentImageResizing.attrs.y,
+    //   src: currentImageResizing.attrs.image.currentSrc,
+    //   width: currentImageResizing.attrs.width,
+    //   height: currentImageResizing.attrs.height
+    // }]));
+    handleModalClose();
+  }
+
+  const reloadImages = () => {
+    setImages(images.concat([{
+      x: currentImageResizing.attrs.x,
+      y: currentImageResizing.attrs.y,
+      src: currentImageResizing.attrs.image.currentSrc,
+      width: currentImageResizing.attrs.width,
+      height: currentImageResizing.attrs.height
+    }]));
+  }
   
+  const asyncHandleSizeSubmit = (e) =>setTimeout(handleSizeSubmit, 0);
+
   const handleOnDrop = (e) => {
 
     console.log(image_node.current);
@@ -145,6 +222,17 @@ const Canvas = (props) => {
         onDrop={handleOnDrop}
         onDragOver={e => e.preventDefault()}
       >
+        {/* <Input value={newWidth} handleChange={handleChangeWidth} ref={ref} /> */}
+
+        <Modal show={modalChangeSize} onHide={e => handleModalClose(e)}>
+        <label>Enter Width</label>
+        <Input value={newWidth} handleChange={handleChangeWidth} ref={ref} />
+        <label>Enter Height</label>
+        <Input value={newHeight} handleChange={handleChangeHeight} ref={ref} />
+        <button onClick={e => asyncHandleSizeSubmit(e)} type="button">
+          Save
+        </button>
+        </Modal>
         <Stage
           width={props.width}
           height={props.height}

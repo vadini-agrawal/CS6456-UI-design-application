@@ -465,29 +465,6 @@ class HomePage extends React.Component {
                     ref={node => {
                         this.container = node;
                     }} >
-                <Modal show={this.state.modalAssetSize} onHide={e => this.modalCloseSize(e)}>
-                    <div className="form-group">
-                    <label>Enter Height</label>
-                    <input 
-                        type="number"
-                        value={this.state.changeAssetHeight}
-                        name="changeAssetHeight"
-                        onChange={e => this.handleChange(e)}
-                        className="form-control"
-                    />
-                    <label>Enter Width</label>
-                    <input 
-                        type="number"
-                        value={this.state.changeAssetWidth}
-                        name="changeAssetWidth"
-                        onChange={e => this.handleChange(e)}
-                        className="form-control"
-                    />
-                    <button onClick={e => this.handleSubmitAssetModal(e)} type="button">
-                    Save
-                    </button>
-                    </div>
-                </Modal>       
                 <CanvasHolder 
                     ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} 
                     floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} 
