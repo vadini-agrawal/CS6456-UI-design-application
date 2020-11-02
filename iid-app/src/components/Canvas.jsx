@@ -46,11 +46,9 @@ const Canvas = (props) => {
   const isWallAsset = React.useRef();
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
-  const [modalChangeSize, changeSize] = React.useState(false);
-  const [modalInputHeight, changeHeight] = React.useState(0);
-  const [modalInputWidth, changeWidth] = React.useState(0);
   const image_node = React.useRef();
   var [rerender, changeRender] = React.useState(false);
+
   
   useEffect(() => {
     if (!images) {
@@ -84,7 +82,6 @@ const Canvas = (props) => {
     console.log("doubleClick");
     console.log(e);
     props.assetSizeHandler(e.currentTarget);
-    changeSize(true);
   }
 
   
