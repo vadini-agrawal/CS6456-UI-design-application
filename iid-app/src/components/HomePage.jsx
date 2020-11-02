@@ -147,12 +147,8 @@ class HomePage extends React.Component {
         attrs.width = parseInt(this.state.changeAssetWidth);
         var target = this.state.modalAssetTarget;
         target.attrs = attrs;
-        this.setState({modalAssetTarget: target, submitAssetChange: true});
+        this.setState({modalAssetTarget: target});
         this.modalCloseSize();
-        setTimeout(function() { 
-            this.setState({submitAssetChange: false})
-        }.bind(this), 5)
-
     }
 
     modalCloseSize() {
@@ -491,7 +487,7 @@ class HomePage extends React.Component {
                 <CanvasHolder 
                     ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} 
                     floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} 
-                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize} submitAssetChange={this.state.submitAssetChange}/>
+                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize}/>
                 </div>
                 </View>
             </div>

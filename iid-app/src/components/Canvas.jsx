@@ -50,6 +50,7 @@ const Canvas = (props) => {
   const [modalInputHeight, changeHeight] = React.useState(0);
   const [modalInputWidth, changeWidth] = React.useState(0);
   const image_node = React.useRef();
+  var [rerender, changeRender] = React.useState(false);
   
   useEffect(() => {
     if (!images) {
@@ -58,17 +59,11 @@ const Canvas = (props) => {
 }, [images]);
 
 
-  if(props.submitAssetChange) {
-    console.log('submitted');
-  }
 
   const handleDragEnd = (e) => {
-    if (e.target.attrs.x > (0) &&
-    e.target.attrs.x < (props.width - 50)&& 
-    e.target.attrs.y > 0 && 
-    e.target.attrs.y < 50) {
+    if (e.target.attrs.x < (props.width - 50) && e.target.attrs.y < 50) {
       setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
-        || item.src !== e.target.attrs.image.currentSrc || item.width !== e.target.attrs.width || item.height !== e.target.attrs.height)));
+        || item.src !== e.target.attrs.image.currentSrc)));
     } else {
       console.log("not trash");
     }
