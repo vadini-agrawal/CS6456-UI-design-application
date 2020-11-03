@@ -147,12 +147,8 @@ class HomePage extends React.Component {
         attrs.width = parseInt(this.state.changeAssetWidth);
         var target = this.state.modalAssetTarget;
         target.attrs = attrs;
-        this.setState({modalAssetTarget: target, submitAssetChange: true});
+        this.setState({modalAssetTarget: target});
         this.modalCloseSize();
-        setTimeout(function() { 
-            this.setState({submitAssetChange: false})
-        }.bind(this), 5)
-
     }
 
     modalCloseSize() {
@@ -225,37 +221,37 @@ class HomePage extends React.Component {
             image_url: dresser,
             width: 10,
             height: 10,
-            isWallAsset: false
+            isWallAsset: "false"
         };
         var propsData1 = {
             image_url: lamp,
             width: 10,
             height: 10,
-            isWallAsset: false
+            isWallAsset: "false"
         };
         var propsData2 = {
             image_url: circle,
             width: 10,
             height: 10,
-            isWallAsset: true
+            isWallAsset: "true"
         };
         var propsData3 = {
             image_url: plant,
             width: 10,
             height: 10,
-            isWallAsset: false
+            isWallAsset: "false"
         };
         var propsData4 = {
             image_url: square,
             width: 10,
             height: 10, 
-            isWallAsset: true
+            isWallAsset: "true"
         };
         var propsData5 = {
             image_url: tv,
             width: 10,
             height: 10,
-            isWallAsset: false
+            isWallAsset: "false"
         };
         var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />, <Asset data={propsData3} />, <Asset data={propsData4} />, <Asset data={propsData5} />
         ];
@@ -491,7 +487,7 @@ class HomePage extends React.Component {
                 <CanvasHolder 
                     ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} 
                     floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} 
-                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize} submitAssetChange={this.state.submitAssetChange}/>
+                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize}/>
                 </div>
                 </View>
             </div>
