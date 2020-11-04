@@ -113,7 +113,7 @@ export default class Canvas extends React.Component {
         <Slider max={50} style={{width: 200}}aria-label= {"Change Pen Width"} valueLabelDisplay="auto" onChange = {this.handleChangeWidthPen} value = {this.state.inputWidth} />
         <Text>       </Text>
         <div className="form-group">
-        <button style={{height:45, margin:15}} onClick={this.handleColorChangeClick}>Pick Pen Color</button>
+        <button style={{height:60, margin:15, backgroundColor: 'grey', fontSize:'20px'}} onClick={this.handleColorChangeClick}>Pick Pen Color</button>
         {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
         <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorPen} />
         </div> : null}
@@ -138,7 +138,7 @@ export default class Canvas extends React.Component {
           </Layer>
         </Stage>
         </div>
-        <Button style={{width:500}} onClick ={() => this.screenGrabber()}>Done</Button>
+        <button style={{backgroundColor:'grey', fontSize:'20px', width: '500px'}} onClick ={() => this.screenGrabber()}>Done</button>
       </div>
     )
   }

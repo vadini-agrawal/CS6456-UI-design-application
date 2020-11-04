@@ -16,6 +16,7 @@ import lamp from '../images/lamp.png';
 import plant from '../images/plant.png';
 import square from '../images/square.png';
 import tv from '../images/tv.png';
+import './HomePage.css';
 
 class HomePage extends React.Component {
 
@@ -327,6 +328,7 @@ class HomePage extends React.Component {
     }
 
     render() {
+        document.body.style = 'background: grey'
         const colorPopover = {
             position: 'absolute',
             zIndex: '2',
@@ -338,43 +340,73 @@ class HomePage extends React.Component {
             bottom: '0px',
             left: '0px',
         }
+        const inputWall = {
+            padding: '2px 2px',
+
+        }
+
         return (
             <div>
                 <View style={{flex: 1, flexDirection: 'row'}}>
+                <style type="text/css">
+                    {`
+                    .btn-home {
+                    background-color: black;
+                    color: white;
+                    padding: 1rem 1rem;
+                    font-size: 1rem;
+                    margin: 1rem;
+                    }
+
+                    .inputWall {
+                        font-size: 20px;
+                        padding: 2px 2px;
+                    }
+                    `}
+                </style>
+
                 <div>
-                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-around'}}> {/* space around not working right now*/}
-                        <Button onClick ={() => exportComponentAsJPEG(this.componentCanvasRef)}>Save</Button>
-                        <Button onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
+                    <View style={{flex: 1, flexDirection: 'column'}}> {/* space around not working right now*/}
+                        <Button variant="home" onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
                         <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
+                            <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
                             <div className="form-group">
-                                <label>Enter Height</label>
+                                <label style={{marginRight: 20, fontSize:'20px'}}>Enter Height (in inches)</label>
+                                <label style={{marginLeft: 20, fontSize:'20px'}}>Enter Width (in inches)</label>
+                                </div>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly'}}>
                                 <input 
+                                    style={{width : 100, marginBottom:20}}
                                     type="number"
                                     value={this.state.modalInputHeight}
                                     name="modalInputHeight"
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                                 />
-                                <label>Enter Width</label>
                                 <input 
+                                    style={{width: 100, marginBottom:20}}
+                                    className="inputWall"
                                     type="number"
                                     value={this.state.modalInputWidth}
                                     name="modalInputWidth"
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                                 />
-                                <button onClick={this.handleColorChangeClick}>Pick Wall Color</button>
+                                </View>
+                                <div className="form-group">
+                                <View style={{flex: 1, flexDirection: 'column', justifyContent:'space-evenly'}}>
+                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={this.handleColorChangeClick}>Pick Wall Color</button>
                                 {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
                                 <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorWall} />
                                 </div> : null}
-                            </div>
-                            <div className="form-group">
-                                <button onClick={e => this.handleSubmitModal(e)} type="button">
+                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={e => this.handleSubmitModal(e)} type="button">
                                 Save
                                 </button>
-                            </div>
+                                </View>
+                                </div>
                         </Modal>
-                        <Button onClick= {e => this.modalOpenImage(e)}>Import Photo</Button>
+                        <Button variant="home" onClick= {e => this.modalOpenImage(e)}>Import Photo</Button>
                         <Modal show= {this.state.modalImage} onHide={e => this.modalCloseImage}>
                             <ImageUploader
                                 withIcon={false}
@@ -387,70 +419,89 @@ class HomePage extends React.Component {
                                 fileSizeError=" file size is too big"
                                 singleImage={true}
                             />
-                            <label> Enter Height (in inches) </label>
+                            <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-between' }}>
+                            <div className="form-group">
+                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Height (inches)</label>
+                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Width (inches)</label>
+                                <label style={{marginLeft: 25, fontSize:'15px'}}> Asset type </label>
+
+                            </div>
+                            </View>
+                            <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly'}}>
                             <input 
+                                    style={{width: 100, marginBottom:20}}
                                     type="number"
                                     value={this.state.photoInputHeight}
                                     name="photoInputHeight"
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
-                            <label> Enter Width (in inches) </label>
                             <input 
+                                    style={{width: 100, marginBottom:20}}
                                     type="number"
                                     value={this.state.photoInputWidth}
                                     name="photoInputWidth"
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
-                            <label> Asset type </label>
                             <select name="isWallAsset" 
+                                    style={{width: 100, marginBottom:20}}
                                     onChange={e => this.handleChange(e)}
                                     className="form-control">
-                                <option value="true" selected>Wall Asset</option>
-                                <option value="false">Floor Asset</option>
+                                <option value="true" selected>Wall</option>
+                                <option value="false">Floor</option>
                             </select>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <Button onClick= {e => this.uploadPhotos(e)}>Done</Button>
-                                <Button onClick= {e => this.modalCloseImage(e)}>Cancel</Button>
+                            </View>
+                            <View style={{flex: 1, flexDirection: 'column'}}>
+                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick= {e => this.uploadPhotos(e)}>Done</button>
+                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick= {e => this.modalCloseImage(e)}>Cancel</button>
                             </View>
                             
                         </Modal>
-
-                        <Button onClick = {e => this.modalOpenDraw(e)}>Draw Asset</Button>
+                        <Button variant="home" onClick = {e => this.modalOpenDraw(e)}>Draw Asset</Button>
                         <Modal show={this.state.modalDraw} onHide={e => this.modalCloseDraw}>
                             <React.Fragment>
-                            <label> Enter Height (in inches) </label>
+                            <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-between' }}>
+                            <div className="form-group">
+                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Height (inches)</label>
+                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Width (inches)</label>
+                                <label style={{marginLeft: 25, fontSize:'15px'}}> Asset type </label>
+
+                            </div>
+                            </View>
+                            <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly'}}>
                             <input 
+                                    style={{width: 100, marginBottom:10}}
                                     type="number"
                                     value={this.state.drawingInputHeight}
                                     name="drawingInputHeight"
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
-                            <label> Enter Width (in inches) </label>
                             <input 
+                                    style={{width: 100, marginBottom:10}}
                                     type="number"
                                     value={this.state.drawingInputWidth}
                                     name="drawingInputWidth"
                                     onChange={e => this.handleChange(e)}
                                     className="form-control"
                             />
-                            <label> Asset type </label>
                             <select name="isWallAsset" 
+                                    style={{width: 100, marginBottom:10}}
                                     onChange={e => this.handleChange(e)}
                                     className="form-control">
-                                <option value="true" selected>Wall Asset</option>
-                                <option value="false">Floor Asset</option>
+                                <option value="true" selected>Wall</option>
+                                <option value="false">Floor</option>
                             </select>
+                            </View>
                             <div id = "draw-canvas">
                             <DrawCanvas action={this.createNewAssetFromDrawing} ref={this.componentDrawRef} height = {this.state.canvasHeight} width = {500} />
                             </div>
-                            <Button onClick = {e => this.modalCloseDraw(e)}>Cancel</Button>
+                            <button style={{backgroundColor:'grey', fontSize:'20px', width:'500px'}} onClick = {e => this.modalCloseDraw(e)}>Cancel</button>
                             </React.Fragment>
                         </Modal>
-                        <Button onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
-                        <Button onClick = {e => this.clearWall()}>Clear Wall</Button>
+                        <Button variant="home" onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
+                        <Button variant="home" onClick = {e => this.clearWall()}>Clear Wall</Button>
                     </View>
                 </div>
                 <div

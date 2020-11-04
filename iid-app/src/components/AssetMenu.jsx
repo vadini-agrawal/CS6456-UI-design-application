@@ -27,7 +27,7 @@ class AssetMenu extends React.Component {
     render() {
         return (
             <div className="shelf">
-            <Carousel itemsToShow={2}>
+            <Carousel itemsToShow={4}>
                     {this.props.assetList}
             </Carousel>
             </div>
