@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Stage, Layer, Image, Rect, Line } from 'react-konva';
+import { Stage, Layer, Image, Rect, Line, Transformer } from 'react-konva';
 // import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
@@ -8,7 +8,7 @@ import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
 import Modal from 'react-bootstrap/Modal';
 
-const URLImage = ({key, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
+const URLImage = ({key, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset, shapeProps, isSelected, onSelect, onChange }) => {
   const [img] = useImage(image.src);
   // let image_node = React.useRef();
   // const y_coord = image.y;
@@ -16,7 +16,18 @@ const URLImage = ({key, image, height, width, onDragEnd, onDragStart, originalX,
   // const image_component = 
   // const AnimatedImage = animated(image_component)
 
+  const shapeRef = React.useRef();
+  const trRef = React.useRef();
+
+  React.useEffect(() => {
+    if (isSelected) {
+      trRef.current.nodes([shapeRef.current]);
+      trRef.current.getLayer().batchDraw();
+    }
+  }, [isSelected]);
+
   return (
+    <React.Fragment>
     <Image
       key={key}
       image={img}
@@ -33,7 +44,41 @@ const URLImage = ({key, image, height, width, onDragEnd, onDragStart, originalX,
       originalX = {originalX}
       originalY = {originalY}
       onDblClick = {onDblClick}
+      onTransformEnd={(e) => {
+        // transformer is changing scale of the node
+        // and NOT its width or height
+        // but in the store we have only width and height
+        // to match the data better we will reset scale on transform end
+        const node = shapeRef.current;
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
+
+        // we will reset it back
+        node.scaleX(1);
+        node.scaleY(1);
+        onChange({
+          ...shapeProps,
+          x: node.x(),
+          y: node.y(),
+          // set minimal value
+          width: Math.max(5, node.width() * scaleX),
+          height: Math.max(node.height() * scaleY),
+        });
+      }}
     />
+    {isSelected && (
+      <Transformer
+        ref={trRef}
+        boundBoxFunc={(oldBox, newBox) => {
+          // limit resize
+          if (newBox.width < 5 || newBox.height < 5) {
+            return oldBox;
+          }
+          return newBox;
+        }}
+      />
+    )}
+    </React.Fragment>
   );
 };
 
@@ -51,6 +96,7 @@ const Canvas = (props) => {
   const [modalInputWidth, changeWidth] = React.useState(0);
   const image_node = React.useRef();
   var [rerender, changeRender] = React.useState(false);
+  const [selectedId, selectShape] = React.useState(null);
   
   useEffect(() => {
     if (!images) {
@@ -58,6 +104,13 @@ const Canvas = (props) => {
     }
 }, [images]);
 
+  const checkDeselect = (e) => {
+    // deselect when clicked on empty area
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      selectShape(null);
+    }
+  };
 
 
   const handleDragEnd = (e) => {
@@ -145,6 +198,8 @@ const Canvas = (props) => {
           height={props.height}
           style={{ border: '1px solid grey' }}
           ref={stageRef}
+          onMouseDown={checkDeselect}
+          onTouchStart={checkDeselect}
         >
         <Layer>
           <Rect 
@@ -160,8 +215,20 @@ const Canvas = (props) => {
             />
         </Layer>
         <Layer>
-        {images.map(image => {
+        {images.map((image, i) => {
             return <URLImage 
+                key={i}
+                shapeProps={image}
+                isSelected={image.id === selectedId}
+                onSelect={() => {
+                  console.log('selected');
+                  selectShape(image.id);
+                }}
+                onChange={(newAttrs) => {
+                  const imgs = images.slice();
+                  imgs[i] = newAttrs;
+                  setImages(imgs);
+                }}
                 image={image} 
                 height={image.height} 
                 width={image.width} 
