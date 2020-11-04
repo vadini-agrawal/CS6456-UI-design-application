@@ -8,8 +8,8 @@ import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
 import Modal from 'react-bootstrap/Modal';
 
-const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
-  const [img] = useImage(image.src);
+const URLImage = ({id, src, x, y, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
+  const [img] = useImage(src);
   // let image_node = React.useRef();
   // const y_coord = image.y;
   // const [spring] = useSpring({y: 10, from: {y: y_coord}})
@@ -20,8 +20,8 @@ const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, 
     <Image
       id = {id}
       image={img}
-      x={image.x}
-      y={image.y}
+      x={x}
+      y={y}
       height={height}
       width={width}
       draggable
@@ -67,12 +67,12 @@ const Canvas = (props) => {
 
     let i = 0;
     for (i = 0; i < new_images.length; i++) {
-      var img_min = new_images[i].x;
-      var img_max = new_images[i].width + new_images[i].x;
-      var img_y = new_images[i].y;
+      var img_min = new_images[i].props.x;
+      var img_max = new_images[i].props.width + new_images[i].props.x;
+      var img_y = new_images[i].props.y;
       if (max_x > img_min && min_x < img_max) {
-        if (new_images[i].iswallasset === "false") {
-          if (new_images[i].id !== id) {
+        if (new_images[i].props.iswallasset === "false") {
+          if (new_images[i].props.id !== id) {
             if (img_y < lowestY) {
               lowestY = img_y;
             }
@@ -87,10 +87,15 @@ const Canvas = (props) => {
     let i = 0;
     let new_images = images;
     for (i = 0; i < new_images.length; i++) {
-      let lowestY = findLowestY(new_images, new_images[i].x, new_images[i].height, new_images[i].width, new_images[i].id);
-      if (new_images[i].y < lowestY) {
-        let img = new_images[i];
-        img.y = lowestY;
+      let lowestY = findLowestY(new_images, new_images[i].props.x, new_images[i].props.height, new_images[i].props.width, new_images[i].props.id);
+      if (new_images[i].props.y < lowestY) {
+        let img_props = Object.assign({}, new_images[i].props);
+        let new_image = new_images[i];
+        new_image.to({
+          y: lowestY,
+        });
+        let img = <URLImage id={img_props.id} src={img_props.src} x={img_props.x} y={lowestY} onDragEnd={handleDragEnd} 
+        onDragStart={handleDragStart} onDblClick={handleDoubleClk} height={img_props.height} width={img_props.width} originalX={img_props.originalX} originalY={img_props.originalY} />
         new_images[i] = img;
       }
     }
@@ -101,7 +106,7 @@ const Canvas = (props) => {
     let i = 0; 
 
     for (i = 0; i < images.length; i++) {
-      if (images[i].id === id) {
+      if (images[i].props.id === id) {
         return i;
       }
     }
@@ -116,22 +121,28 @@ const Canvas = (props) => {
         || item.src !== e.target.attrs.image.currentSrc)));
       } 
     else {
-      if (e.target.attrs.x > 0 && 
-        e.target.attrs.y < props.height || 
-        e.target.attrs.x < props.width) {
+      // if (e.target.attrs.x > 0 && 
+      //   e.target.attrs.y < props.height && 
+      //   e.target.attrs.x < props.width) {
+          console.log(e.target);
+          console.log(images);
           var new_images = images;
           let ind = findImageId(e.target.attrs.id);
-          var img = new_images[ind];
-          img.x = e.target.attrs.x;
-          img.y = e.target.attrs.y;
-          new_images[ind] = img;
-          let lowestFloor = findLowestY(new_images, e.target.attrs.x, img.height, img.width, img.id);
+          var img_props =  Object.assign({}, new_images[ind].props);
+          // console.log(img_props);
+          // img_props.x = e.target.attrs.x;
+          // img_props.y = e.target.attrs.y;
+          var new_image = <URLImage id={img_props.id} src={img_props.src} x={e.target.attrs.x} y={e.target.attrs.y} onDragEnd={handleDragEnd} 
+          onDragStart={handleDragStart} onDblClick={handleDoubleClk} height={img_props.height} width={img_props.width} originalX={img_props.originalX} originalY={img_props.originalY} />
+          new_images[ind] = new_image;
+          let lowestFloor = findLowestY(new_images, e.target.attrs.x, img_props.height, img_props.width, img_props.id);
           var new_images2 = images;
           let ind2 = findImageId(e.target.attrs.id);
-          var img2 = new_images2[ind2];
-          img2.x = e.target.attrs.x;
-          img2.y = lowestFloor;
-          new_images2[ind2] = img2;
+          var img2_props = Object.assign({}, new_images2[ind2].props);
+          // img2_props.x = e.target.attrs.x;
+          // img2_props.y = lowestFloor;
+          new_images2[ind2] =<URLImage id={img2_props.id} src={img2_props.src} x={e.target.attrs.x} y={lowestFloor} onDragEnd={handleDragEnd} 
+          onDragStart={handleDragStart} onDblClick={handleDoubleClk} height={img2_props.height} width={img2_props.width} originalX={img_props.originalX} originalY={img2_props.originalY} />;
           if (e.target.attrs.iswallasset === "true") {
             setImages(new_images);
           } else {
@@ -142,7 +153,7 @@ const Canvas = (props) => {
             });
           }
           console.log(images);
-        }
+        // }
     }
     // console.log(this.image_node);
   }
@@ -168,42 +179,78 @@ const Canvas = (props) => {
 
     // add image
     if (stageRef.current.getPointerPosition().x > (0) &&
-        stageRef.current.getPointerPosition().x < (props.width - 50) && 
+        stageRef.current.getPointerPosition().x < (50) && 
         stageRef.current.getPointerPosition().y > 0 && 
         stageRef.current.getPointerPosition().y < 50) 
     {
     } else {
       if (isWallAsset.current === "false") {
-        console.log(isWallAsset.current);
-        // console.log()
+        console.log("FLOOOR ASSSET");
+        // console.log(images);
         var lowestY = findLowestY(images, stageRef.current.getPointerPosition().x, imgHeight.current, imgWidth.current);
+        var nextImg = [
+          <URLImage 
+            id={dragUrl.current + stageRef.current.getPointerPosition().x.toString() + lowestY.toString()}
+            x={stageRef.current.getPointerPosition().x} 
+            y={lowestY} 
+            src={dragUrl.current}
+            height={imgHeight.current}
+            width={imgWidth.current}
+            onDragEnd={handleDragEnd} 
+            onDragStart={handleDragStart} 
+            originalX={stageRef.current.getPointerPosition().x} 
+            originalY={lowestY} 
+            onDblClick={handleDoubleClk}
+            iswallasset={isWallAsset.current}
+          />]
         setImages(
-          images.concat([
-            {
-              id: dragUrl.current + stageRef.current.getPointerPosition().x.toString() + lowestY.toString(),
-              x: stageRef.current.getPointerPosition().x,
-              y: lowestY,
-              src: dragUrl.current,
-              height: imgHeight.current,
-              width: imgWidth.current,
-              iswallasset: isWallAsset.current,
-            }
-          ])
+          images.concat(nextImg)
         );
+          // images.concat([
+          //   {
+          //     id: dragUrl.current + stageRef.current.getPointerPosition().x.toString() + lowestY.toString(),
+          //     x: stageRef.current.getPointerPosition().x,
+          //     y: lowestY,
+          //     src: dragUrl.current,
+          //     height: imgHeight.current,
+          //     width: imgWidth.current,
+          //     iswallasset: isWallAsset.current,
+          //   }
+          // ])
       } else {
+        console.log("NOT A FLOOR ASSETTTT");
+        console.log(isWallAsset.current);
+        console.log(false);
         setImages(
-          images.concat([
-            {
-              id: dragUrl.current + stageRef.current.getPointerPosition().x.toString() + stageRef.current.getPointerPosition().y.toString(),
-              ...stageRef.current.getPointerPosition(),
-              src: dragUrl.current,
-              height: imgHeight.current,
-              width: imgWidth.current,
-              iswallasset: isWallAsset.current,
-            }
-          ])
+          images.concat(
+            <URLImage 
+              id={dragUrl.current + stageRef.current.getPointerPosition().x.toString() + lowestY.toString()}
+              src={dragUrl.current}
+              x={stageRef.current.getPointerPosition().x} 
+              y={stageRef.current.getPointerPosition().y} 
+              height={imgHeight.current}
+              width={imgWidth.current}
+              onDragEnd={handleDragEnd} 
+              onDragStart={handleDragStart} 
+              originalX={stageRef.current.getPointerPosition().x} 
+              originalY={stageRef.current.getPointerPosition().x} 
+              onDblClick={handleDoubleClk}
+              iswallasset={isWallAsset.current}
+            />
+          )
+          // images.concat([
+          //   {
+          //     id: dragUrl.current + stageRef.current.getPointerPosition().x.toString() + stageRef.current.getPointerPosition().y.toString(),
+          //     ...stageRef.current.getPointerPosition(),
+          //     src: dragUrl.current,
+          //     height: imgHeight.current,
+          //     width: imgWidth.current,
+          //     iswallasset: isWallAsset.current,
+          //   }
+          // ])
         );      // }
     }
+    // console.log(images);
   }
   }
 
@@ -240,17 +287,8 @@ const Canvas = (props) => {
         </Layer>
         <Layer>
         {images.map(image => {
-            return <URLImage 
-                id = {image.id}
-                image={image} 
-                height={image.height} 
-                width={image.width} 
-                onDragEnd={handleDragEnd} 
-                onDragStart={handleDragStart} 
-                originalX={image.x} 
-                originalY={image.y} 
-                onDblClick={handleDoubleClk}
-                iswallasset={image.iswallasset}/>;
+            console.log(image);
+            return image;
         })}
         </Layer>
         <Layer>
