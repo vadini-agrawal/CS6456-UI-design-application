@@ -8,7 +8,7 @@ import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
 import Modal from 'react-bootstrap/Modal';
 
-const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
+const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset, _id}) => {
   const [img] = useImage(image.src);
   // let image_node = React.useRef();
   // const y_coord = image.y;
@@ -34,6 +34,7 @@ const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, 
       originalY = {originalY}
       iswallasset = {iswallasset}
       onDblClick = {onDblClick}
+      _id = {_id}
     />
   );
 };
@@ -45,6 +46,7 @@ const Canvas = (props) => {
   const imgWidth = React.useRef();
   const stageRef = React.useRef();
   const isWallAsset = React.useRef();
+  const _id = React.useRef();
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
   const [modalChangeSize, changeSize] = React.useState(false);
@@ -52,6 +54,7 @@ const Canvas = (props) => {
   const [modalInputWidth, changeWidth] = React.useState(0);
   const image_node = React.useRef();
   var [rerender, changeRender] = React.useState(false);
+  const [currentId, setCurrentId] = React.useState(9);
   
   useEffect(() => {
     if (!images) {
@@ -150,6 +153,20 @@ const Canvas = (props) => {
   const handleDragStart = (e) => {
     // console.log("Drag Start");
     // console.log(e);
+    console.log(e.currentTarget._id);
+    const id = e.currentTarget._id;
+    console.log(images);
+    const items = images.slice();
+    console.log("items");
+    console.log(items);
+    const item = images.find(i => i._id === id);
+    console.log("item");
+    console.log(item);
+    const index = items.indexOf(item);
+    items.splice(index, 1);
+    items.push(item);
+    setImages(items);
+    console.log(items);
   }
 
   const handleDoubleClk = (e) => {
@@ -187,6 +204,8 @@ const Canvas = (props) => {
               height: imgHeight.current,
               width: imgWidth.current,
               iswallasset: isWallAsset.current,
+              _id : _id.current
+
             }
           ])
         );
@@ -200,6 +219,7 @@ const Canvas = (props) => {
               height: imgHeight.current,
               width: imgWidth.current,
               iswallasset: isWallAsset.current,
+              _id : _id.current
             }
           ])
         );      // }
@@ -250,7 +270,8 @@ const Canvas = (props) => {
                 originalX={image.x} 
                 originalY={image.y} 
                 onDblClick={handleDoubleClk}
-                iswallasset={image.iswallasset}/>;
+                iswallasset={image.iswallasset}
+                _id={image._id}/>;
         })}
         </Layer>
         <Layer>
@@ -278,6 +299,8 @@ const Canvas = (props) => {
           imgHeight.current = e.target.height;
           imgWidth.current = e.target.width;
           isWallAsset.current = e.target.dataset.iswallasset;
+          _id.current = currentId;
+          setCurrentId(currentId + 1);
         }}>
         <Layer>
           <AssetMenu assetList = {props.assetList}/>

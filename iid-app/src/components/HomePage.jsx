@@ -221,37 +221,43 @@ class HomePage extends React.Component {
             image_url: dresser,
             width: 10,
             height: 10,
-            isWallAsset: "false"
+            isWallAsset: "false",
+            _id: 9
         };
         var propsData1 = {
             image_url: lamp,
             width: 10,
             height: 10,
-            isWallAsset: "false"
+            isWallAsset: "false",
+            _id: 10
         };
         var propsData2 = {
             image_url: circle,
             width: 10,
             height: 10,
-            isWallAsset: "true"
+            isWallAsset: "true",
+            _id: 11
         };
         var propsData3 = {
             image_url: plant,
             width: 10,
             height: 10,
-            isWallAsset: "false"
+            isWallAsset: "false",
+            _id: 12
         };
         var propsData4 = {
             image_url: square,
             width: 10,
             height: 10, 
-            isWallAsset: "true"
+            isWallAsset: "true",
+            _id: 13
         };
         var propsData5 = {
             image_url: tv,
             width: 10,
             height: 10,
-            isWallAsset: "false"
+            isWallAsset: "false",
+            _id: 14
         };
         var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />, <Asset data={propsData3} />, <Asset data={propsData4} />, <Asset data={propsData5} />
         ];
