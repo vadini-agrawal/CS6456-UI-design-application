@@ -53,6 +53,7 @@ class HomePage extends React.Component {
             modalAssetTarget: null,
             submitAssetChange: false,
             isWallAsset: "true", 
+            wallImage: null,
         };
         this.componentDrawRef = React.createRef();
         this.componentCanvasRef = React.createRef();
@@ -132,12 +133,22 @@ class HomePage extends React.Component {
     
 
     handleSubmitModal(e) {
-        this.setState({
-            canvasWidth: this.state.modalInputWidth, 
-            canvasHeight: this.state.modalInputHeight,
-            wallColor: this.state.modalInputColor,
-            floorColor: this.state.modalInputFloorColor
-        });
+        if (this.state.picture != null) {
+            this.setState({
+                wallImage : this.state.picture,
+                canvasWidth: this.state.modalInputWidth, 
+                canvasHeight: this.state.modalInputHeight,
+                picture: null,
+            })
+        } else {
+            this.setState({
+                canvasWidth: this.state.modalInputWidth, 
+                canvasHeight: this.state.modalInputHeight,
+                wallColor: this.state.modalInputColor,
+                floorColor: this.state.modalInputFloorColor,
+                wallImage: null,
+            });
+        }
         this.modalCloseWall();
         this.forceUpdate();
     }
@@ -277,6 +288,7 @@ class HomePage extends React.Component {
     //     });
     //   };
 
+
     handleColorChangeClick = () => {
         this.setState({colorInput : true});
     }
@@ -369,6 +381,17 @@ class HomePage extends React.Component {
                     <View style={{flex: 1, flexDirection: 'column'}}> {/* space around not working right now*/}
                         <Button variant="home" onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
                         <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
+                        <ImageUploader
+                                withIcon={false}
+                                withPreview={true}
+                                label=""
+                                buttonText="Select Photo"
+                                onChange={this.onDrop}
+                                imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg", ".jpeg"]}
+                                maxFileSize={1048576}
+                                fileSizeError=" file size is too big"
+                                singleImage={true}
+                            />
                             <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
                             <div className="form-group">
                                 <label style={{marginRight: 20, fontSize:'20px'}}>Enter Height (in inches)</label>
@@ -402,6 +425,9 @@ class HomePage extends React.Component {
                                 </div> : null}
                                 <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={e => this.handleSubmitModal(e)} type="button">
                                 Save
+                                </button>
+                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={e => this.modalCloseWall(e)} type="button">
+                                Cancel
                                 </button>
                                 </View>
                                 </div>
@@ -538,7 +564,7 @@ class HomePage extends React.Component {
                 <CanvasHolder 
                     ref={this.componentCanvasRef} width={this.state.canvasWidth} height={this.state.canvasHeight} 
                     floorColor={this.state.floorColor} wallColor={this.state.wallColor} assetList={this.state.assetList} 
-                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize}/>
+                    clearWall={this.state.clearWall} assetSizeHandler={this.modalOpenChangeAssetSize} wallImage={this.state.wallImage}/>
                 </div>
                 </View>
             </div>

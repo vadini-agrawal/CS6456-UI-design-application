@@ -11,7 +11,7 @@ class CanvasHolder extends React.Component {
       return <Canvas
                 width={this.props.width} height={this.props.height} floorColor={this.props.floorColor}
                  wallColor={this.props.wallColor} assetList={this.props.assetList} clearWall={this.props.clearWall} 
-                 assetSizeHandler={this.props.assetSizeHandler}/>
+                 assetSizeHandler={this.props.assetSizeHandler} wallImage={this.props.wallImage}/>
     }
 }
 

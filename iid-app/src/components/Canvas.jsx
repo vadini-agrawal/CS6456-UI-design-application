@@ -7,6 +7,7 @@ import {Spring, useSpring, animated} from 'react-spring';
 import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
 import Modal from 'react-bootstrap/Modal';
+import Konva from 'konva';
 
 const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
   const [img] = useImage(image.src);
@@ -38,6 +39,18 @@ const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, 
   );
 };
 
+const BackgroundImage = ({wallImage, width, height}) => {
+  const [backgroundImage] = useImage(wallImage);
+  return (
+  <Image 
+    image={backgroundImage} 
+    width={width} 
+    height={height} 
+    x={0}
+    y={0} 
+    />
+  );
+};
 
 const Canvas = (props) => {
   const dragUrl = React.useRef();
@@ -48,10 +61,11 @@ const Canvas = (props) => {
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
   const [modalChangeSize, changeSize] = React.useState(false);
-  const [modalInputHeight, changeHeight] = React.useState(0);
-  const [modalInputWidth, changeWidth] = React.useState(0);
   const image_node = React.useRef();
-  var [rerender, changeRender] = React.useState(false);
+
+  // if (props.wallImage != null) {
+  //   changeWallImage(props.wallImage);
+  // }
   
   useEffect(() => {
     if (!images) {
@@ -226,13 +240,21 @@ const Canvas = (props) => {
           ref={stageRef}
         >
         <Layer>
-          <Rect 
+          {/* <Rect 
             x={0}
             y={0}
             width={props.width}
             height={props.height}
             fill={props.wallColor}
-          />
+          /> */}
+
+          {props.wallImage ? 
+          
+          <BackgroundImage width={props.width} height={props.height} wallImage={props.wallImage} /> :
+          <Rect x={0} y={0} width={props.width} height={props.height} fill={props.wallColor}/>
+          }
+          
+          
           <TrashCanImage
             x = {0}
             y = {0}
