@@ -1,8 +1,9 @@
+ 
 
-
-.shelf {
+.shelf 
+{   
     min-height: 200px;
-    background-color: cornflowerblue;
+    background-color: lightseagreen;
 }
 
 img {

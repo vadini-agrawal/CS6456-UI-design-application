@@ -5,6 +5,7 @@ import {ChromePicker} from 'react-color';
 import {Slider} from '@material-ui/core';
 import {Text} from 'react-native';
 import html2canvas from 'html2canvas';
+import '../style/HomePage.css';
 
 
 
@@ -113,7 +114,7 @@ export default class Canvas extends React.Component {
         <Slider max={50} style={{width: 200}}aria-label= {"Change Pen Width"} valueLabelDisplay="auto" onChange = {this.handleChangeWidthPen} value = {this.state.inputWidth} />
         <Text>       </Text>
         <div className="form-group">
-        <button style={{height:60, margin:15, backgroundColor: 'grey', fontSize:'20px'}} onClick={this.handleColorChangeClick}>Pick Pen Color</button>
+        <button className="special_button" onClick={this.handleColorChangeClick}>Pick Pen Color</button>
         {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
         <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorPen} />
         </div> : null}
@@ -121,24 +122,26 @@ export default class Canvas extends React.Component {
         </div>
         {/* </View> */}
         <div id="draw-canvas" name="draw-canvas" className="draw-canvas">
-        <Stage
-          width={this.props.width}
-          height={this.props.height}
-          onContentMousedown={this.handleMouseDown}
-          onContentMousemove={this.handleMouseMove}
-          onContentMouseup={this.handleMouseUp}
-          ref={node => {
-            this.stageRef = node;
-          }}
-        >
-          <Layer>
-          {this.state.allLines.map((line, i) => (
-            <Line key={i} points={line[2]} stroke={line[0]} strokeWidth={line[1]}/>
-          ))}
-          </Layer>
-        </Stage>
+          <div id="draw-area">
+          <Stage
+            width={this.props.width}
+            height={this.props.height}
+            onContentMousedown={this.handleMouseDown}
+            onContentMousemove={this.handleMouseMove}
+            onContentMouseup={this.handleMouseUp}
+            ref={node => {
+              this.stageRef = node;
+            }}
+          >
+            <Layer>
+            {this.state.allLines.map((line, i) => (
+              <Line key={i} points={line[2]} stroke={line[0]} strokeWidth={line[1]}/>
+            ))}
+            </Layer>
+          </Stage>
+          </div>
         </div>
-        <button style={{backgroundColor:'grey', fontSize:'20px', width: '500px'}} onClick ={() => this.screenGrabber()}>Done</button>
+        <button className="modal_button" onClick ={() => this.screenGrabber()}>Done</button>
       </div>
     )
   }
