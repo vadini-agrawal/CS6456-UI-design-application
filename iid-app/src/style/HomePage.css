@@ -3,6 +3,44 @@
     padding: 2px 2px;
 }
 
+.modal {
+    padding: 10%;
+}
+
+.modal_button {
+    color: white;
+    justify-self: center;
+    background-color: teal;
+    border: none;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+    width: 100%;
+}
+
+.special_button {
+    color: white;
+    border: 1px solid black;
+    height: 40px;
+    margin: 15px;
+    background-color: teal;
+    font-size: 15px;
+}
+
+.special_button:hover {
+    color: black;
+}
+
+#draw-area {
+    border: 1px solid black;
+}
+
+.modal_button:hover {
+    color: black;
+}
+
 .mm-popup {
     display: none;
 }
@@ -65,6 +103,7 @@
         margin: 0;
         line-height: 32px;
         height: 32px;
+        width: 80px;
         border: 1px solid #666;
         text-align: center;
         display: inline-block;
@@ -208,3 +247,4 @@
         margin-top: 10px;
     }
 }
+

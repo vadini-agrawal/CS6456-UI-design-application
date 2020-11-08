@@ -97,17 +97,16 @@ const Canvas = (props) => {
   };
 
   const moveHigherImages = (images) => {
-    let i = 0;
-    let new_images = images;
-    for (i = 0; i < new_images.length; i++) {
-      let lowestY = findLowestY(new_images, new_images[i].x, new_images[i].height, new_images[i].width, new_images[i].id);
-      if (new_images[i].y < lowestY) {
-        let img = new_images[i];
-        img.y = lowestY;
-        new_images[i] = img;
-      }
-    }
-    return new_images;
+    // let i = 0;
+    // let new_images = images;
+    // for (i = 0; i < new_images.length; i++) {
+    //   let lowestY = findLowestY(new_images, new_images[i].x, new_images[i].height, new_images[i].width, new_images[i].id);
+    //   if (new_images[i].y < lowestY) {
+    //     let img = new_images[i];
+    //     img.y = lowestY;
+    //     new_images[i] = img;
+    //   }
+    return images;
   }
 
   const findImageId = (id) => {

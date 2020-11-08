@@ -10,13 +10,24 @@ import DrawCanvas from './DrawCanvas';
 import {exportComponentAsJPEG, exportComponentAsPDF} from 'react-component-export-image';
 import CanvasHolder from './CanvasHolder';
 import { API_URL } from './config';
+
+//Images 
 import circle from '../images/circlepng.png';
 import dresser from '../images/dresser.png';
 import lamp from '../images/lamp.png';
 import plant from '../images/plant.png';
 import square from '../images/square.png';
 import tv from '../images/tv.png';
-import './HomePage.css';
+import brown_couch from '../images/brown_couch.png'
+import flowers from '../images/flowers.png'
+import photo_frame from '../images/photo_frame.png'
+import tall_lamp from '../images/tall_lamp.png'
+import white_couch from '../images/white_couch.png'
+import white_lamp from '../images/white_lamp.png'
+import white_plant from '../images/white_plant.png'
+import side_table from '../images/side_table.png'
+
+import '../style/HomePage.css';
 
 class HomePage extends React.Component {
 
@@ -35,7 +46,7 @@ class HomePage extends React.Component {
             modalInputColor: "#fff",
             wallColor: "#fff",
             modalInputFloorColor: "#000000",
-            floorColor: "#000000",
+            floorColor: "#35281e",
             items:[],
             picture: null,
             modalImage: false,
@@ -108,10 +119,7 @@ class HomePage extends React.Component {
 
     onDrop(event) {
         const formData = new FormData();
-        console.log(event);
         formData.append(0, event[0]);
-        console.log("FILE DATAAAA");
-        console.log(formData.get("0"));
         fetch(`${API_URL}/image-upload`, {
             method: 'POST',
             body: formData
@@ -235,12 +243,12 @@ class HomePage extends React.Component {
             height: 10,
             isWallAsset: "false"
         };
-        var propsData1 = {
-            image_url: lamp,
-            width: 10,
-            height: 10,
-            isWallAsset: "false"
-        };
+        // var propsData1 = {
+        //     image_url: lamp,
+        //     width: 10,
+        //     height: 10,
+        //     isWallAsset: "false"
+        // };
         var propsData2 = {
             image_url: circle,
             width: 10,
@@ -259,14 +267,61 @@ class HomePage extends React.Component {
             height: 10, 
             isWallAsset: "true"
         };
-        var propsData5 = {
-            image_url: tv,
+        // var propsData5 = {
+        //     image_url: tv,
+        //     width: 12,
+        //     height: 10,
+        //     isWallAsset: "false"
+        // };
+        var propsData6 = {
+            image_url: brown_couch,
+            width: 33,
+            height: 15,
+            isWallAsset: "false"
+        }
+        var propsData7  = {
+            image_url: flowers,
+            width: 8,
+            height: 10,
+            isWallAsset: "false"
+        }
+        var propsData8 = {
+            image_url: photo_frame,
+            width: 10,
+            height: 10.5,
+            isWallAsset: "true"
+        }
+        var propsData9 = {
+            image_url: tall_lamp,
+            width: 9,
+            height: 20,
+            isWallAsset: "false"
+        }
+        var propsData10 = {
+            image_url: white_couch,
+            width: 33,
+            height: 15,
+            isWallAsset: "false"
+        }
+        var propsData11 = {
+            image_url: white_lamp,
+            width: 7,
+            height: 10,
+            isWallAsset: "false"
+        }
+        var propsData12 = {
+            image_url: white_plant,
+            width: 8,
+            height: 12,
+            isWallAsset: "false"
+        }
+        var propsData13 = {
+            image_url: side_table,
             width: 10,
             height: 10,
             isWallAsset: "false"
-        };
-        var list = [<Asset data={propsData}/>, <Asset data={propsData1} />, <Asset data={propsData2} />, <Asset data={propsData3} />, <Asset data={propsData4} />, <Asset data={propsData5} />
-        ];
+        }
+        var list = [<Asset data={propsData13} />, <Asset data={propsData6} />, <Asset data={propsData7} />, <Asset data={propsData8} />, <Asset data={propsData9} />, <Asset data={propsData10} />,  <Asset data={propsData11} />,  <Asset data={propsData12} /> , <Asset data={propsData}/>, <Asset data={propsData2} />, <Asset data={propsData3} />, <Asset data={propsData4} /> ];
         this.setState({assetList: list});
     }
 
@@ -340,7 +395,7 @@ class HomePage extends React.Component {
     }
 
     render() {
-        document.body.style = 'background: grey'
+        document.body.style = 'background: #FEF9E2'
         const colorPopover = {
             position: 'absolute',
             zIndex: '2',
@@ -363,7 +418,7 @@ class HomePage extends React.Component {
                 <style type="text/css">
                     {`
                     .btn-home {
-                    background-color: black;
+                    background-color: teal;
                     color: white;
                     padding: 1rem 1rem;
                     font-size: 1rem;
@@ -380,7 +435,7 @@ class HomePage extends React.Component {
                 <div>
                     <View style={{flex: 1, flexDirection: 'column'}}> {/* space around not working right now*/}
                         <Button variant="home" onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
-                        <Modal show={this.state.modalWall} onHide={e => this.modalCloseWall}>
+                        <Modal className="modal" show={this.state.modalWall} onHide={e => this.modalCloseWall}>
                         <ImageUploader
                                 withIcon={false}
                                 withPreview={true}
@@ -394,8 +449,8 @@ class HomePage extends React.Component {
                             />
                             <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
                             <div className="form-group">
-                                <label style={{marginRight: 20, fontSize:'20px'}}>Enter Height (in inches)</label>
-                                <label style={{marginLeft: 20, fontSize:'20px'}}>Enter Width (in inches)</label>
+                                <label style={{marginRight: 20, fontSize:'15px'}}>Enter Height (in pixels)</label>
+                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Width (in pixels)</label>
                                 </div>
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly'}}>
@@ -419,14 +474,14 @@ class HomePage extends React.Component {
                                 </View>
                                 <div className="form-group">
                                 <View style={{flex: 1, flexDirection: 'column', justifyContent:'space-evenly'}}>
-                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={this.handleColorChangeClick}>Pick Wall Color</button>
+                                <button className="modal_button" onClick={this.handleColorChangeClick}>Pick Wall Color</button>
                                 {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
                                 <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorWall} />
                                 </div> : null}
-                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={e => this.handleSubmitModal(e)} type="button">
+                                <button className="modal_button" onClick={e => this.handleSubmitModal(e)} type="button">
                                 Save
                                 </button>
-                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick={e => this.modalCloseWall(e)} type="button">
+                                <button className="modal_button" onClick={e => this.modalCloseWall(e)} type="button">
                                 Cancel
                                 </button>
                                 </View>
@@ -479,8 +534,8 @@ class HomePage extends React.Component {
                             </select>
                             </View>
                             <View style={{flex: 1, flexDirection: 'column'}}>
-                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick= {e => this.uploadPhotos(e)}>Done</button>
-                                <button style={{backgroundColor:'grey', fontSize:'20px,'}} onClick= {e => this.modalCloseImage(e)}>Cancel</button>
+                                <button className="modal_button" onClick= {e => this.uploadPhotos(e)}>Done</button>
+                                <button className="modal_button" onClick= {e => this.modalCloseImage(e)}>Cancel</button>
                             </View>
                             
                         </Modal>
@@ -523,7 +578,7 @@ class HomePage extends React.Component {
                             <div id = "draw-canvas">
                             <DrawCanvas action={this.createNewAssetFromDrawing} ref={this.componentDrawRef} height = {this.state.canvasHeight} width = {500} />
                             </div>
-                            <button style={{backgroundColor:'grey', fontSize:'20px', width:'500px'}} onClick = {e => this.modalCloseDraw(e)}>Cancel</button>
+                            <button className="modal_button" onClick = {e => this.modalCloseDraw(e)}>Cancel</button>
                             </React.Fragment>
                         </Modal>
                         <Button variant="home" onClick = {e => this.createInitialAssets()}>Clear Assets</Button>
@@ -556,7 +611,7 @@ class HomePage extends React.Component {
                         onChange={e => this.handleChange(e)}
                         className="form-control"
                     />
-                    <button onClick={e => this.handleSubmitAssetModal(e)} type="button">
+                    <button  className="modal_button" onClick={e => this.handleSubmitAssetModal(e)} type="button">
                     Save
                     </button>
                     </div>
