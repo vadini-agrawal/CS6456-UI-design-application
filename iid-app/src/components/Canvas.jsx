@@ -19,7 +19,7 @@ const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, 
 
   return (
     <Image
-      id = {id}
+      id={id}
       image={img}
       x={image.x}
       y={image.y}
@@ -61,8 +61,7 @@ const Canvas = (props) => {
   const [images, setImages] = React.useState([]);
   const test = [10,70, 130];
   const [modalChangeSize, changeSize] = React.useState(false);
-  const image_node = React.useRef();
-
+  const [nodes, setNodes] = React.useState([]);
   // if (props.wallImage != null) {
   //   changeWallImage(props.wallImage);
   // }
@@ -125,6 +124,9 @@ const Canvas = (props) => {
   }
 
   const handleDragEnd = (e) => {
+    console.log("NODESSSSSSS");
+    console.log(nodes);
+    console.log("NODESSSSS END");
     if (e.target.attrs.x < 50 && e.target.attrs.y < 50) {
       setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
         || item.src !== e.target.attrs.image.currentSrc)));
@@ -149,8 +151,9 @@ const Canvas = (props) => {
           if (e.target.attrs.iswallasset === "true") {
             setImages(new_images);
           } else {
-            let newest_images = moveHigherImages(new_images2);
-            setImages(newest_images);
+            // let newest_images = moveHigherImages(new_images2);
+            // setImages(newest_images);
+            setImages(new_images2)
             e.target.to({
               y: lowestFloor,
             });
@@ -176,13 +179,13 @@ const Canvas = (props) => {
   
   const handleOnDrop = (e) => {
 
-    console.log(image_node.current);
+    // console.log(image_node.current);
     // register event position
     stageRef.current.setPointersPositions(e);
 
     // add image
     if (stageRef.current.getPointerPosition().x > (0) &&
-        stageRef.current.getPointerPosition().x < (props.width - 50) && 
+        stageRef.current.getPointerPosition().x < (50) && 
         stageRef.current.getPointerPosition().y > 0 && 
         stageRef.current.getPointerPosition().y < 50) 
     {
@@ -263,16 +266,16 @@ const Canvas = (props) => {
         <Layer>
         {images.map(image => {
             return <URLImage 
-                id = {image.id}
-                image={image} 
-                height={image.height} 
-                width={image.width} 
-                onDragEnd={handleDragEnd} 
-                onDragStart={handleDragStart} 
-                originalX={image.x} 
-                originalY={image.y} 
-                onDblClick={handleDoubleClk}
-                iswallasset={image.iswallasset}/>;
+            id={image.id}
+            image={image} 
+            height={image.height} 
+            width={image.width} 
+            onDragEnd={handleDragEnd} 
+            onDragStart={handleDragStart} 
+            originalX={image.x} 
+            originalY={image.y} 
+            onDblClick={handleDoubleClk}
+            iswallasset={image.iswallasset}/>
         })}
         </Layer>
         <Layer>
@@ -295,7 +298,7 @@ const Canvas = (props) => {
       </div>
         <div 
         onDragStart={e => {
-          image_node.current = e.target;
+          // image_node.current = e.target;
           dragUrl.current = e.target.src;
           imgHeight.current = e.target.height;
           imgWidth.current = e.target.width;
