@@ -1,13 +1,10 @@
 import React, {useEffect} from 'react';
-import { Stage, Layer, Image, Rect, Line } from 'react-konva';
+import { Stage, Layer, Image, Rect} from 'react-konva';
 // import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
-import {Spring, useSpring, animated} from 'react-spring';
 import TrashCanImage from './TrashCanImage';
 import '../style/AssetMenu.css';
-import Modal from 'react-bootstrap/Modal';
-import Konva from 'konva';
 
 const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
   const [img] = useImage(image.src);
@@ -59,12 +56,8 @@ const Canvas = (props) => {
   const stageRef = React.useRef();
   const isWallAsset = React.useRef();
   const [images, setImages] = React.useState([]);
-  const test = [10,70, 130];
-  const [modalChangeSize, changeSize] = React.useState(false);
   const [nodes, setNodes] = React.useState([]);
-  // if (props.wallImage != null) {
-  //   changeWallImage(props.wallImage);
-  // }
+
   
   useEffect(() => {
     if (!images) {
@@ -131,8 +124,8 @@ const Canvas = (props) => {
         || item.src !== e.target.attrs.image.currentSrc)));
       } 
     else {
-      if (e.target.attrs.x > 0 && 
-        e.target.attrs.y < props.height || 
+      if ((e.target.attrs.x > 0 && 
+        e.target.attrs.y < props.height) || 
         e.target.attrs.x < props.width) {
           var new_images = images;
           let ind = findImageId(e.target.attrs.id);
@@ -172,13 +165,11 @@ const Canvas = (props) => {
     console.log("doubleClick");
     console.log(e);
     props.assetSizeHandler(e.currentTarget);
-    changeSize(true);
   }
 
   
   const handleOnDrop = (e) => {
 
-    // console.log(image_node.current);
     // register event position
     stageRef.current.setPointersPositions(e);
 
@@ -223,7 +214,7 @@ const Canvas = (props) => {
   }
   }
 
-  if (props.clearWall == true && images.length != 0){
+  if (props.clearWall === true && images.length !== 0){
     images.splice(0, images.length);
   }
 
@@ -242,13 +233,6 @@ const Canvas = (props) => {
           ref={stageRef}
         >
         <Layer>
-          {/* <Rect 
-            x={0}
-            y={0}
-            width={props.width}
-            height={props.height}
-            fill={props.wallColor}
-          /> */}
 
           {props.wallImage ? 
           
