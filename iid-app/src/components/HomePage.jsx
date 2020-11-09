@@ -484,7 +484,7 @@ class HomePage extends React.Component {
                                 Cancel
                                 </button>
                         </Modal>
-                        <Button variant="home" onClick= {e=> this.modalOpenWallColor(e)}>Edit Wall Color</Button>
+                        <Button variant="home" onClick= {e=> this.modalOpenWallColor(e)}>Edit Wall Background</Button>
                         <Modal className="modal" show={this.state.modalWallColor} onHide={e => this.modalCloseWallColor}>
                         <ImageUploader
                                 withIcon={false}
