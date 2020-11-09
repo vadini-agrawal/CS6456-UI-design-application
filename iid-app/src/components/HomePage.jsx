@@ -37,11 +37,12 @@ class HomePage extends React.Component {
             isDragging : false,
             x: 50,
             y: 50,
-            canvasWidth: 750,
-            canvasHeight: 500,
-            modalWall: false,
-            modalInputWidth: 750,
-            modalInputHeight: 500,
+            canvasWidth: 900,
+            canvasHeight: 600,
+            modalWallSize: false,
+            modalWallColor: false,
+            modalInputWidth: 75,
+            modalInputHeight: 50,
             colorInput: false,
             modalInputColor: "#fff",
             wallColor: "#fff",
@@ -140,26 +141,33 @@ class HomePage extends React.Component {
       }
     
 
-    handleSubmitModal(e) {
+    handleSubmitModalWallColor(e) {
         if (this.state.picture != null) {
             this.setState({
                 wallImage : this.state.picture,
-                canvasWidth: this.state.modalInputWidth, 
-                canvasHeight: this.state.modalInputHeight,
                 picture: null,
             })
         } else {
             this.setState({
-                canvasWidth: this.state.modalInputWidth, 
-                canvasHeight: this.state.modalInputHeight,
                 wallColor: this.state.modalInputColor,
                 floorColor: this.state.modalInputFloorColor,
                 wallImage: null,
             });
         }
-        this.modalCloseWall();
+        this.modalCloseWallColor();
         this.forceUpdate();
     }
+
+    handleSubmitModalWallSize(e) {
+        this.setState({
+            canvasHeight: this.state.modalInputHeight * 12,
+            canvasWidth: this.state.modalInputWidth * 12
+        })
+        this.modalCloseWallSize();
+        this.forceUpdate();
+    }
+
+
 
     handleSubmitAssetModal(e) {
         var attrs = this.state.modalAssetTarget.attrs;
@@ -181,8 +189,12 @@ class HomePage extends React.Component {
         this.setState({modalAssetSize: true, modalAssetTarget: target, changeAssetHeight: target.attrs.height, changeAssetWidth: target.attrs.width});
     }
 
-    modalOpenWall() {
-        this.setState({modalWall: true});
+    modalOpenWallColor() {
+        this.setState({modalWallColor: true});
+    }
+
+    modalOpenWallSize() {
+        this.setState({modalWallSize: true})
     }
 
     modalOpenImage() {
@@ -201,8 +213,12 @@ class HomePage extends React.Component {
         this.setState({modalImage: false});
     }
 
-    modalCloseWall() {
-        this.setState({modalWall: false});
+    modalCloseWallSize() {
+        this.setState({modalWallSize: false});
+    }
+
+    modalCloseWallColor() {
+        this.setState({modalWallColor: false});
     }
 
     handleChangeColorWall = (color, event) => {
@@ -434,23 +450,12 @@ class HomePage extends React.Component {
 
                 <div>
                     <View style={{flex: 1, flexDirection: 'column'}}> {/* space around not working right now*/}
-                        <Button variant="home" onClick= {e=> this.modalOpenWall(e)}>Edit Wall Size/Color</Button>
-                        <Modal className="modal" show={this.state.modalWall} onHide={e => this.modalCloseWall}>
-                        <ImageUploader
-                                withIcon={false}
-                                withPreview={true}
-                                label=""
-                                buttonText="Select Photo"
-                                onChange={this.onDrop}
-                                imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg", ".jpeg"]}
-                                maxFileSize={1048576}
-                                fileSizeError=" file size is too big"
-                                singleImage={true}
-                            />
-                            <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
+                        <Button variant="home" onClick= {e=> this.modalOpenWallSize(e)}>Edit Wall Size</Button>
+                        <Modal className="modal" show={this.state.modalWallSize} onHide={e => this.modalCloseWallSize}>
+                        <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
                             <div className="form-group">
-                                <label style={{marginRight: 20, fontSize:'15px'}}>Enter Height (in pixels)</label>
-                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Width (in pixels)</label>
+                                <label style={{marginRight: 20, fontSize:'15px'}}>Enter Height (in inches)</label>
+                                <label style={{marginLeft: 20, fontSize:'15px'}}>Enter Width (in inches)</label>
                                 </div>
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly'}}>
@@ -472,16 +477,37 @@ class HomePage extends React.Component {
                                     className="form-control"
                                 />
                                 </View>
+                                <button className="modal_button" onClick={e => this.handleSubmitModalWallSize(e)} type="button">
+                                Save
+                                </button>
+                                <button className="modal_button" onClick={e => this.modalCloseWallSize(e)} type="button">
+                                Cancel
+                                </button>
+                        </Modal>
+                        <Button variant="home" onClick= {e=> this.modalOpenWallColor(e)}>Edit Wall Color</Button>
+                        <Modal className="modal" show={this.state.modalWallColor} onHide={e => this.modalCloseWallColor}>
+                        <ImageUploader
+                                withIcon={false}
+                                withPreview={true}
+                                label=""
+                                buttonText="Select Photo"
+                                onChange={this.onDrop}
+                                imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg", ".jpeg"]}
+                                maxFileSize={1048576}
+                                fileSizeError=" file size is too big"
+                                singleImage={true}
+                            />
+
                                 <div className="form-group">
                                 <View style={{flex: 1, flexDirection: 'column', justifyContent:'space-evenly'}}>
                                 <button className="modal_button" onClick={this.handleColorChangeClick}>Pick Wall Color</button>
                                 {this.state.colorInput ? <div style ={colorPopover}> <div style={cover} onClick={this.handleColorChangeClose} />
                                 <ChromePicker color={this.state.modalInputColor} onChange = {this.handleChangeColorWall} />
                                 </div> : null}
-                                <button className="modal_button" onClick={e => this.handleSubmitModal(e)} type="button">
+                                <button className="modal_button" onClick={e => this.handleSubmitModalWallColor(e)} type="button">
                                 Save
                                 </button>
-                                <button className="modal_button" onClick={e => this.modalCloseWall(e)} type="button">
+                                <button className="modal_button" onClick={e => this.modalCloseWallColor(e)} type="button">
                                 Cancel
                                 </button>
                                 </View>
