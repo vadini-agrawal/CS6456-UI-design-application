@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Stage, Layer, Line } from "react-konva";
-import {Button} from 'react-bootstrap';
 import {ChromePicker} from 'react-color';
 import {Slider} from '@material-ui/core';
 import {Text} from 'react-native';

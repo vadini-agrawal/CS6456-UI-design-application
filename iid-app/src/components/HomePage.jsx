@@ -7,17 +7,14 @@ import { ChromePicker } from 'react-color';
 import ImageUploader from "react-images-upload";
 import Asset from "./Asset";
 import DrawCanvas from './DrawCanvas';
-import {exportComponentAsJPEG, exportComponentAsPDF} from 'react-component-export-image';
 import CanvasHolder from './CanvasHolder';
 import { API_URL } from './config';
 
 //Images 
 import circle from '../images/circlepng.png';
 import dresser from '../images/dresser.png';
-import lamp from '../images/lamp.png';
 import plant from '../images/plant.png';
 import square from '../images/square.png';
-import tv from '../images/tv.png';
 import brown_couch from '../images/brown_couch.png'
 import flowers from '../images/flowers.png'
 import photo_frame from '../images/photo_frame.png'
@@ -94,29 +91,6 @@ class HomePage extends React.Component {
         console.log("do something with", uri);
     }
 
-    // screenGrabber() {
-    //     const input = document.getElementById('draw-canvas');
-    //     var imgData2 = null;
-    //     html2canvas(input)
-    //     .then((canvas) => {
-    //         const imgData = canvas.toDataURL('image/png');
-    //         this.setState({
-    //             drawing: imgData
-    //         }, () => {
-    //             this.createNewAssetFromDrawing();
-    //         });
-    //         imgData2=imgData;
-    //         // const pdf = new jsPDF();
-    //         // pdf.addImage(imgData, 'PNG', 0, 0);
-    //         // pdf.save('download.pdf');
-    //         // console.log(imgData);
-    //         // console.log(pdf);
-    //         console.log("drawing");
-    //         console.log(imgData);
-    //     });
-    //     //this.createNewAssetFromDrawing(imgData2);
-    // ;
-    // }
 
     onDrop(event) {
         const formData = new FormData();
@@ -222,7 +196,7 @@ class HomePage extends React.Component {
     }
 
     handleChangeColorWall = (color, event) => {
-        this.setState({modalInputColor: color.hex, wallColor: color.hex});
+        this.setState({modalInputColor: color.hex});
     }
 
     handleChangeColorFloor = (color, event) => {
@@ -230,10 +204,11 @@ class HomePage extends React.Component {
     }
 
     createNewAssetFromDrawing(img) {
+        var wallAssetBool;
         if (this.state.isWallAsset === "true") {
-            var wallAssetBool = true;
+            wallAssetBool = true;
         } else {
-            var wallAssetBool = false;
+            wallAssetBool = false;
         }
         var propsData = {
             image_url: img,
@@ -259,12 +234,6 @@ class HomePage extends React.Component {
             height: 10,
             isWallAsset: "false"
         };
-        // var propsData1 = {
-        //     image_url: lamp,
-        //     width: 10,
-        //     height: 10,
-        //     isWallAsset: "false"
-        // };
         var propsData2 = {
             image_url: circle,
             width: 10,
@@ -283,12 +252,6 @@ class HomePage extends React.Component {
             height: 10, 
             isWallAsset: "true"
         };
-        // var propsData5 = {
-        //     image_url: tv,
-        //     width: 12,
-        //     height: 10,
-        //     isWallAsset: "false"
-        // };
         var propsData6 = {
             image_url: brown_couch,
             width: 33,
@@ -342,24 +305,6 @@ class HomePage extends React.Component {
     }
 
 
-    // componentDidMount() {
-    //     this.checkSize();
-    //     window.addEventListener("resize", this.checkSize);
-    // }
-
-
-    // componentWillUnmount() {
-    //     window.removeEventListener("resize", this.checkSize);
-    // }
-   
-    // checkSize = () => {
-    //     const width = this.container.offsetWidth;
-    //     this.setState({
-    //       canvasWidth: width,
-    //     });
-    //   };
-
-
     handleColorChangeClick = () => {
         this.setState({colorInput : true});
     }
@@ -382,11 +327,12 @@ class HomePage extends React.Component {
 
 
     uploadPhotos() {
-        if (this.state.picture != "") {
+        if (this.state.picture !== "") {
+            var wallAssetBool;
             if (this.state.isWallAsset === "true") {
-                var wallAssetBool = true;
+                wallAssetBool = true;
             } else {
-                var wallAssetBool = false;
+                wallAssetBool = false;
             }
             var propsData = {
                 image_url: this.state.picture,
@@ -405,7 +351,6 @@ class HomePage extends React.Component {
             });
             this.modalCloseImage();
         } else {
-            // TODO: Add a toast that shows that the image couldn't be imported 
             console.log("Something went wrong importing the image");
         }
     }
@@ -422,10 +367,6 @@ class HomePage extends React.Component {
             right: '0px',
             bottom: '0px',
             left: '0px',
-        }
-        const inputWall = {
-            padding: '2px 2px',
-
         }
 
         return (
@@ -469,7 +410,6 @@ class HomePage extends React.Component {
                                 />
                                 <input 
                                     style={{width: 100, marginBottom:20}}
-                                    className="inputWall"
                                     type="number"
                                     value={this.state.modalInputWidth}
                                     name="modalInputWidth"
