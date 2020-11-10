@@ -15,6 +15,7 @@ import circle from '../images/circlepng.png';
 import dresser from '../images/dresser.png';
 import plant from '../images/plant.png';
 import square from '../images/square.png';
+import tv from '../images/tv.png';
 import brown_couch from '../images/brown_couch.png'
 import flowers from '../images/flowers.png'
 import photo_frame from '../images/photo_frame.png'
@@ -234,6 +235,12 @@ class HomePage extends React.Component {
             height: 10,
             isWallAsset: "false"
         };
+        // var propsData1 = {
+        //     image_url: lamp,
+        //     width: 10,
+        //     height: 10,
+        //     isWallAsset: "false"
+        // };
         var propsData2 = {
             image_url: circle,
             width: 10,
@@ -252,6 +259,12 @@ class HomePage extends React.Component {
             height: 10, 
             isWallAsset: "true"
         };
+        // var propsData5 = {
+        //     image_url: tv,
+        //     width: 12,
+        //     height: 10,
+        //     isWallAsset: "false"
+        // };
         var propsData6 = {
             image_url: brown_couch,
             width: 33,
