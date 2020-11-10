@@ -453,7 +453,7 @@ class HomePage extends React.Component {
                                 </View>
                                 </div>
                         </Modal>
-                        <Button variant="home" onClick= {e => this.modalOpenImage(e)}>Import Photo</Button>
+                        <Button variant="home" onClick= {e => this.modalOpenImage(e)}>Import Asset</Button>
                         <Modal show= {this.state.modalImage} onHide={e => this.modalCloseImage}>
                             <ImageUploader
                                 withIcon={false}
