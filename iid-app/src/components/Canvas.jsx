@@ -93,6 +93,7 @@ const Canvas = (props) => {
         }
       }
     } 
+    console.log(height);
     return lowestY - height;
   };
 

@@ -367,17 +367,13 @@ class HomePage extends React.Component {
 
     uploadPhotos() {
         if (this.state.picture != "") {
-            if (this.state.isWallAsset === "true") {
-                var wallAssetBool = true;
-            } else {
-                var wallAssetBool = false;
-            }
             var propsData = {
                 image_url: this.state.picture,
                 width: Number(this.state.photoInputWidth),
                 height: Number(this.state.photoInputHeight),
-                isWallAsset: wallAssetBool
+                isWallAsset: this.state.isWallAsset
             };
+            console.log(this.state.isWallAsset);
             var newAsset = <Asset data={propsData} />
             var assetListNew = [newAsset].concat(this.state.assetList);
             this.setState({
@@ -385,7 +381,7 @@ class HomePage extends React.Component {
                 picture: null,
                 photoInputHeight: 10,
                 photoInputWidth: 10,
-                isWallAsset: true
+                isWallAsset: "true"
             });
             this.modalCloseImage();
         } else {
