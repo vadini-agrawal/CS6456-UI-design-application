@@ -167,13 +167,12 @@ const Canvas = (props) => {
 
     // add image
     if (stageRef.current.getPointerPosition().x > (0) &&
-        stageRef.current.getPointerPosition().x < (50) && 
+        stageRef.current.getPointerPosition().x < 50 && 
         stageRef.current.getPointerPosition().y > 0 && 
         stageRef.current.getPointerPosition().y < 50) 
     {
     } else {
       if (isWallAsset.current === "false") {
-        console.log(isWallAsset.current);
         var lowestY = findLowestY(images, stageRef.current.getPointerPosition().x, imgHeight.current, imgWidth.current);
         setImages(
           images.concat([
@@ -192,8 +191,8 @@ const Canvas = (props) => {
         setImages(
           images.concat([
             {
-              id: dragUrl.current + stageRef.current.getPointerPosition().x.toString() + stageRef.current.getPointerPosition().y.toString(),
               ...stageRef.current.getPointerPosition(),
+              id: dragUrl.current + stageRef.current.getPointerPosition().x.toString() + stageRef.current.getPointerPosition().y.toString(),
               src: dragUrl.current,
               height: imgHeight.current,
               width: imgWidth.current,
