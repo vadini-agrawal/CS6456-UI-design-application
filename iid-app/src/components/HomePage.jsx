@@ -141,12 +141,10 @@ class HomePage extends React.Component {
         this.forceUpdate();
     }
 
-
-
     handleSubmitAssetModal(e) {
         var attrs = this.state.modalAssetTarget.attrs;
-        attrs.height = parseInt(this.state.changeAssetHeight);
-        attrs.width = parseInt(this.state.changeAssetWidth);
+        attrs.height = parseInt(this.state.changeAssetHeight) * 12;
+        attrs.width = parseInt(this.state.changeAssetWidth) * 12;
         var target = this.state.modalAssetTarget;
         target.attrs = attrs;
         this.setState({modalAssetTarget: target});
@@ -160,7 +158,7 @@ class HomePage extends React.Component {
     }
 
     modalOpenChangeAssetSize(target) {
-        this.setState({modalAssetSize: true, modalAssetTarget: target, changeAssetHeight: target.attrs.height, changeAssetWidth: target.attrs.width});
+        this.setState({modalAssetSize: true, modalAssetTarget: target, changeAssetHeight: parseInt(target.attrs.height / 12), changeAssetWidth: parseInt(target.attrs.width / 12)});
     }
 
     modalOpenWallColor() {
@@ -561,7 +559,7 @@ class HomePage extends React.Component {
                     }} >
                 <Modal show={this.state.modalAssetSize} onHide={e => this.modalCloseSize(e)}>
                     <div className="form-group">
-                    <label>Enter Height</label>
+                    <label>Enter Height (in inches) </label>
                     <input 
                         type="number"
                         value={this.state.changeAssetHeight}
@@ -569,7 +567,7 @@ class HomePage extends React.Component {
                         onChange={e => this.handleChange(e)}
                         className="form-control"
                     />
-                    <label>Enter Width</label>
+                    <label>Enter Width (in inches) </label>
                     <input 
                         type="number"
                         value={this.state.changeAssetWidth}
