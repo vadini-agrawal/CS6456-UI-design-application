@@ -93,29 +93,21 @@ const Canvas = (props) => {
         }
       }
     } 
-    // console.log(height);
-    // console.log(lowestY);
-    // console.log(props.height);
-    // if (lowestY >= props.height) {
-    //   return lowestY - height;
-    // }
-    // else {
     return lowestY - height + height / 4;
-    // }
   };
 
-  const moveHigherImages = (images) => {
-    // let i = 0;
-    // let new_images = images;
-    // for (i = 0; i < new_images.length; i++) {
-    //   let lowestY = findLowestY(new_images, new_images[i].x, new_images[i].height, new_images[i].width, new_images[i].id);
-    //   if (new_images[i].y < lowestY) {
-    //     let img = new_images[i];
-    //     img.y = lowestY;
-    //     new_images[i] = img;
-    //   }
-    return images;
-  }
+  // const moveHigherImages = (images) => {
+  //   // let i = 0;
+  //   // let new_images = images;
+  //   // for (i = 0; i < new_images.length; i++) {
+  //   //   let lowestY = findLowestY(new_images, new_images[i].x, new_images[i].height, new_images[i].width, new_images[i].id);
+  //   //   if (new_images[i].y < lowestY) {
+  //   //     let img = new_images[i];
+  //   //     img.y = lowestY;
+  //   //     new_images[i] = img;
+  //   //   }
+  //   return images;
+  // }
 
   const findImageId = (id) => {
     let i = 0; 
@@ -156,8 +148,6 @@ const Canvas = (props) => {
           if (e.target.attrs.iswallasset === "true") {
             setImages(new_images);
           } else {
-            // let newest_images = moveHigherImages(new_images2);
-            // setImages(newest_images);
             setImages(new_images2)
             e.target.to({
               y: lowestFloor,
@@ -166,12 +156,9 @@ const Canvas = (props) => {
           console.log(images);
         }
     }
-    // console.log(this.image_node);
   }
   
   const handleDragStart = (e) => {
-    // console.log("Drag Start");
-    // console.log(e);
   }
 
   const handleDoubleClk = (e) => {
@@ -183,9 +170,6 @@ const Canvas = (props) => {
 
   
   const handleOnDrop = (e) => {
-
-    // console.log(image_node.current);
-    // register event position
     stageRef.current.setPointersPositions(e);
 
     // add image
@@ -197,7 +181,6 @@ const Canvas = (props) => {
     } else {
       if (isWallAsset.current === "false") {
         console.log(isWallAsset.current);
-        // console.log()
         var lowestY = findLowestY(images, stageRef.current.getPointerPosition().x, imgHeight.current, imgWidth.current);
         setImages(
           images.concat([
@@ -248,21 +231,11 @@ const Canvas = (props) => {
           ref={stageRef}
         >
         <Layer>
-          {/* <Rect 
-            x={0}
-            y={0}
-            width={props.width}
-            height={props.height}
-            fill={props.wallColor}
-          /> */}
-
           {props.wallImage ? 
           
           <BackgroundImage width={props.width} height={props.height} wallImage={props.wallImage} /> :
           <Rect x={0} y={0} width={props.width} height={props.height} fill={props.wallColor}/>
           }
-          
-          
           <TrashCanImage
             x = {0}
             y = {0}
