@@ -67,26 +67,26 @@ const Canvas = (props) => {
 
 
   const findLowestY = (new_images, x, height, width, id) => {
-    var lowestY = props.height;
-    var min_x = x;
-    var max_x = x + width;
+    var lowestY = props.height - 15;
+    var min_x = x - width / 2;
+    var max_x = x + width - width / 2;
 
     let i = 0;
     for (i = 0; i < new_images.length; i++) {
-      var img_min = new_images[i].x;
-      var img_max = new_images[i].width + new_images[i].x;
+      var img_min = new_images[i].x - new_images[i].width / 2
+      var img_max = new_images[i].width + new_images[i].x - new_images[i].width / 2;
       var img_y = new_images[i].y;
       if (max_x > img_min && min_x < img_max) {
         if (new_images[i].iswallasset === "false") {
           if (new_images[i].id !== id) {
             if (img_y < lowestY) {
-              lowestY = img_y;
+              lowestY = img_y - new_images[i].height / 4;
             }
           }
         }
       }
     } 
-    return lowestY - height;
+    return lowestY - height + height / 4;
   };
 
   // const moveHigherImages = (images) => {
@@ -121,8 +121,8 @@ const Canvas = (props) => {
         || item.src !== e.target.attrs.image.currentSrc)));
       } 
     else {
-      if ((e.target.attrs.x > 0 && 
-        e.target.attrs.y < props.height) || 
+      if (e.target.attrs.x > 0 && 
+        e.target.attrs.y < props.height || 
         e.target.attrs.x < props.width) {
           var new_images = images;
           let ind = findImageId(e.target.attrs.id);
@@ -140,8 +140,6 @@ const Canvas = (props) => {
           if (e.target.attrs.iswallasset === "true") {
             setImages(new_images);
           } else {
-            // let newest_images = moveHigherImages(new_images2);
-            // setImages(newest_images);
             setImages(new_images2)
             e.target.to({
               y: lowestFloor,
@@ -150,12 +148,9 @@ const Canvas = (props) => {
           console.log(images);
         }
     }
-    // console.log(this.image_node);
   }
   
   const handleDragStart = (e) => {
-    // console.log("Drag Start");
-    // console.log(e);
   }
 
   const handleDoubleClk = (e) => {
@@ -228,14 +223,11 @@ const Canvas = (props) => {
           ref={stageRef}
         >
         <Layer>
-
           {props.wallImage ? 
           
           <BackgroundImage width={props.width} height={props.height} wallImage={props.wallImage} /> :
           <Rect x={0} y={0} width={props.width} height={props.height} fill={props.wallColor}/>
           }
-          
-          
           <TrashCanImage
             x = {0}
             y = {0}
