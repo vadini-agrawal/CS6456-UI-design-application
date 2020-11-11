@@ -10,7 +10,7 @@ class AssetMenu extends React.Component {
     render() {
         return (
             <div className="shelf">
-            <Carousel itemsToShow={4}>
+            <Carousel itemsToShow={4} enableMouseSwipe={false}>
                 {this.props.assetList}
             </Carousel>
             </div>

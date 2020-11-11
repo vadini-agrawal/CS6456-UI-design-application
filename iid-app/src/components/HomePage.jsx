@@ -107,10 +107,12 @@ class HomePage extends React.Component {
                 return res.json()
             })
             .then(images => {
-                if (images[0].url !== "") {
-                    this.setState({
-                        picture: images[0].url
-                    });
+                if (images !== null && images[0] !== null) {
+                    if (images[0].url !== "") {
+                        this.setState({
+                            picture: images[0].url
+                        });
+                    }
                 }
             });
       }
