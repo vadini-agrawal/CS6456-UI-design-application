@@ -4,6 +4,12 @@ import { Stage, Layer, Image, Rect} from 'react-konva';
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
 import TrashCanImage from './TrashCanImage';
+//Audio 
+import TrashSound from '../images/trash.mp3';
+import DropSound from '../images/drop.mp3';
+import HeavyDrop from '../images/heavy_drop.mp3';
+import WallDrop from '../images/wall_drop.mp3';
+
 import '../style/AssetMenu.css';
 
 const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
@@ -119,6 +125,8 @@ const Canvas = (props) => {
     if (e.target.attrs.x < 50 && e.target.attrs.y < 50) {
       setImages(images.filter(item => (item.x !== e.target.attrs.originalX || item.y !== e.target.attrs.originalY 
         || item.src !== e.target.attrs.image.currentSrc)));
+        const trash = document.getElementById("trash_audio");
+        trash.play();
       } 
     else {
       if (e.target.attrs.x > 0 && 
@@ -144,6 +152,8 @@ const Canvas = (props) => {
             e.target.to({
               y: lowestFloor,
             });
+            const drop = document.getElementById("drop_audio");
+            drop.play();
           }
           console.log(images);
         }
@@ -171,6 +181,8 @@ const Canvas = (props) => {
         stageRef.current.getPointerPosition().y > 0 && 
         stageRef.current.getPointerPosition().y < 50) 
     {
+      const trash = document.getElementById("trash_audio");
+      trash.play();
     } else {
       if (isWallAsset.current === "false") {
         var lowestY = findLowestY(images, stageRef.current.getPointerPosition().x, imgHeight.current, imgWidth.current);
@@ -187,6 +199,13 @@ const Canvas = (props) => {
             }
           ])
         );
+        if (imgHeight.current / 12 > 10 || imgWidth.current / 12 > 10) {
+          const heavy = document.getElementById("heavy_drop");
+          heavy.play();
+        } else {
+          const drop = document.getElementById("drop_audio");
+          drop.play();
+        }
       } else {
         setImages(
           images.concat([
@@ -199,7 +218,9 @@ const Canvas = (props) => {
               iswallasset: isWallAsset.current,
             }
           ])
-        );      // }
+        );  
+        const wall = document.getElementById("wall_drop");
+        wall.play();
     }
   }
   }
@@ -210,6 +231,18 @@ const Canvas = (props) => {
 
   return (
     <div>
+      <audio id="trash_audio">
+        <source src={TrashSound}></source>
+      </audio>
+      <audio id="drop_audio">
+        <source src={DropSound}></source>
+      </audio>
+      <audio id="heavy_drop">
+        <source src={HeavyDrop}></source>
+      </audio>
+      <audio id="wall_drop">
+        <source src={WallDrop}></source>
+      </audio>
       <div
         id = "divToPrint"
         className = "mt4"
