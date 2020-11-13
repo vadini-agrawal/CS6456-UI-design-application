@@ -6,8 +6,6 @@ import {Text} from 'react-native';
 import html2canvas from 'html2canvas';
 import '../style/HomePage.css';
 
-
-
 export default class Canvas extends React.Component {
     constructor(props) {
         super(props)
@@ -119,7 +117,6 @@ export default class Canvas extends React.Component {
         </div> : null}
         </div>
         </div>
-        {/* </View> */}
         <div id="draw-canvas" name="draw-canvas" className="draw-canvas">
           <div id="draw-area">
           <Stage

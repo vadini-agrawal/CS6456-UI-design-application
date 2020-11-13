@@ -74,22 +74,18 @@ class HomePage extends React.Component {
 
     componentWillMount() {
         this.createInitialAssets();
-        console.log(this.state.assetList);
     }
 
     handleChange(e) {
         const target = e.target;
         const name = target.name;
         const value = target.value;
-        // console.log(name);
-        // console.log(value);
         this.setState({
           [name]: value
         });
     }
 
     onCapture = uri => {
-        console.log("do something with", uri);
     }
 
 
@@ -235,12 +231,6 @@ class HomePage extends React.Component {
             height: 10,
             isWallAsset: "false"
         };
-        // var propsData1 = {
-        //     image_url: lamp,
-        //     width: 10,
-        //     height: 10,
-        //     isWallAsset: "false"
-        // };
         var propsData2 = {
             image_url: circle,
             width: 10,
@@ -259,12 +249,6 @@ class HomePage extends React.Component {
             height: 10, 
             isWallAsset: "true"
         };
-        // var propsData5 = {
-        //     image_url: tv,
-        //     width: 12,
-        //     height: 10,
-        //     isWallAsset: "false"
-        // };
         var propsData6 = {
             image_url: brown_couch,
             width: 33,
@@ -347,7 +331,6 @@ class HomePage extends React.Component {
                 height: Number(this.state.photoInputHeight),
                 isWallAsset: this.state.isWallAsset
             };
-            console.log(this.state.isWallAsset);
             var newAsset = <Asset data={propsData} />
             var assetListNew = [newAsset].concat(this.state.assetList);
             this.setState({
