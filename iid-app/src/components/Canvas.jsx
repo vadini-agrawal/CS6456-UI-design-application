@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import { Stage, Layer, Image, Rect} from 'react-konva';
-// import {Button} from "react-bootstrap";
 import useImage from 'use-image';
 import AssetMenu from './AssetMenu';
 import TrashCanImage from './TrashCanImage';
@@ -14,11 +13,6 @@ import '../style/AssetMenu.css';
 
 const URLImage = ({id, image, height, width, onDragEnd, onDragStart, originalX, originalY, onDblClick, iswallasset }) => {
   const [img] = useImage(image.src);
-  // let image_node = React.useRef();
-  // const y_coord = image.y;
-  // const [spring] = useSpring({y: 10, from: {y: y_coord}})
-  // const image_component = 
-  // const AnimatedImage = animated(image_component)
 
   return (
     <Image
@@ -62,8 +56,6 @@ const Canvas = (props) => {
   const stageRef = React.useRef();
   const isWallAsset = React.useRef();
   const [images, setImages] = React.useState([]);
-  const [nodes, setNodes] = React.useState([]);
-
   
   useEffect(() => {
     if (!images) {
@@ -94,19 +86,6 @@ const Canvas = (props) => {
     } 
     return lowestY - height + height / 4;
   };
-
-  // const moveHigherImages = (images) => {
-  //   // let i = 0;
-  //   // let new_images = images;
-  //   // for (i = 0; i < new_images.length; i++) {
-  //   //   let lowestY = findLowestY(new_images, new_images[i].x, new_images[i].height, new_images[i].width, new_images[i].id);
-  //   //   if (new_images[i].y < lowestY) {
-  //   //     let img = new_images[i];
-  //   //     img.y = lowestY;
-  //   //     new_images[i] = img;
-  //   //   }
-  //   return images;
-  // }
 
   const findImageId = (id) => {
     let i = 0; 

@@ -1,5 +1,4 @@
 import React from 'react';
-// import styled from 'styled-components';
 import Carousel from 'react-elastic-carousel';
 
 import '../style/AssetMenu.css';
