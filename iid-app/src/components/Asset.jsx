@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
+import Modal from 'react-bootstrap/Modal';
 
-function Asset(props)
-{   
+function Asset(props) {
     let assetWidth = props.data.width;
     let assetHeight = props.data.height;
 
