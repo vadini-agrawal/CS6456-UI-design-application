@@ -116,6 +116,7 @@ class HomePage extends React.Component {
 
     handleSubmitModalWallColor(e) {
         if (this.state.picture != null) {
+            console.log(this.state.picture);
             this.setState({
                 wallImage : this.state.picture,
                 picture: null,
