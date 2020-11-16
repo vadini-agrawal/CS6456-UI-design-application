@@ -130,8 +130,13 @@ const Canvas = (props) => {
             e.target.to({
               y: lowestFloor,
             });
-            const drop = document.getElementById("drop_audio");
-            drop.play();
+            if (imgHeight.current / 12 > 10 || imgWidth.current / 12 > 10) {
+              const heavy = document.getElementById("heavy_drop");
+              heavy.play();
+            } else {
+              const drop = document.getElementById("drop_audio");
+              drop.play();
+            }
           }
         }
     }
